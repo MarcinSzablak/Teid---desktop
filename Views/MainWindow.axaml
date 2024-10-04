@@ -3,18 +3,82 @@
         xmlns:vm="using:NoNameMusicApp.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="NoNameMusicApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="NoNameMusicApp">
+        Title="NoNameMusicApp"
+        MinHeight="506"
+        MinWidth="960"
+        SystemDecorations="BorderOnly">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+    <StackPanel>
+        <!--górny pasek z biblioteko i tak dalej-->
+        <Grid Background="#1A1A1A"
+            PointerPressed="DraggableAreaPointerPressed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button Content="Details"
+                        Margin="5"/>
+                <Button Content="Library"
+                        Margin="5"/>
+                <Button Content="Disk"
+                        Margin="5"/>    
+            </StackPanel>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Padding="10"
+                        Click="MinimalizeButtonClick">
+                    <Image Source="{SvgImage /Assets/minimize.svg}"/>
+                </Button>
+                <Button Padding="10"
+                        Click="MaximalizeButtonClick">
+                    <Image Source="{SvgImage /Assets/maximize.svg}"/>
+                </Button>
+                <Button Padding="10"
+                        Click="CloseButtonClick">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="Red"></Setter>
+                        </Style>
+                    </Button.Styles>
+                    <Image Source="{SvgImage /Assets/close.svg}"/>
+                </Button> 
+            </StackPanel>
 
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        Background="Red"
+                        Height="10000"><!--jak coś zapełnia wszystkie luki-->
+                <TextBlock Text="lala"/>
+            </StackPanel>
+                
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="lala"/>
+            </StackPanel>
+        </Grid> 
+    </StackPanel>
+    <!--<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    -->
 </Window>
