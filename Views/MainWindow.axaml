@@ -18,10 +18,15 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
         <!--górny pasek z biblioteko i tak dalej-->
         <Grid Background="#1A1A1A"
-            PointerPressed="DraggableAreaPointerPressed">
+            PointerPressed="DraggableAreaPointerPressed"
+            Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -31,26 +36,66 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Center">
                 <Button Content="Details"
-                        Margin="5"/>
+                        Margin="5"
+                        Click="ChangeToDetailsClick"
+                        Background="#1A1A1A"
+                        Padding="10">
+                        <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#4B65A9"></Setter>
+                        </Style>
+                    </Button.Styles>
+                </Button>
                 <Button Content="Library"
-                        Margin="5"/>
+                        Margin="5"
+                        Click="ChangeToLibraryClick"
+                        Background="#1A1A1A"
+                        Padding="10">
+                        <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#4B65A9"></Setter>
+                        </Style>
+                    </Button.Styles>
+                </Button>
                 <Button Content="Disk"
-                        Margin="5"/>    
+                        Margin="5"
+                        Click="ChangeToDiskClick"
+                        Background="#1A1A1A"
+                        Padding="10">
+                        <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#4B65A9"></Setter>
+                        </Style>
+                    </Button.Styles>
+                </Button>
             </StackPanel>
 
             <StackPanel Grid.Column="2"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Padding="10"
-                        Click="MinimalizeButtonClick">
+                        Click="MinimalizeButtonClick"
+                        Background="#1A1A1A">
                     <Image Source="{SvgImage /Assets/minimize.svg}"/>
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#4B65A9"></Setter>
+                        </Style>
+                    </Button.Styles>
                 </Button>
                 <Button Padding="10"
-                        Click="MaximalizeButtonClick">
+                        Click="MaximalizeButtonClick"
+                        Background="#1A1A1A">
                     <Image Source="{SvgImage /Assets/maximize.svg}"/>
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#4B65A9"></Setter>
+                        </Style>
+                    </Button.Styles>
                 </Button>
                 <Button Padding="10"
-                        Click="CloseButtonClick">
+                        Click="CloseButtonClick"
+                        Background="#1A1A1A">
                     <Button.Styles>
                         <Style Selector="Button:pointerover /template/ ContentPresenter">
                             <Setter Property="Background" Value="Red"></Setter>
@@ -61,24 +106,47 @@
             </StackPanel>
 
         </Grid>
+        <!--main sekcja z rzeczami-->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0"
-                        Background="Red"
-                        Height="10000"><!--jak coś zapełnia wszystkie luki-->
-                <TextBlock Text="lala"/>
-            </StackPanel>
-                
-            <StackPanel Grid.Column="1">
-                <TextBlock Text="lala"/>
-            </StackPanel>
-        </Grid> 
-    </StackPanel>
-    <!--<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    -->
+                <StackPanel Grid.Column="0"
+                            Background="#252525">
+                    <Grid x:Name="DetailsGrid">
+                        <TextBlock Text="lala1"/>
+                    </Grid>
+
+                    <Grid x:Name="LibraryGrid">
+                        <TextBlock Text="lala2"/>
+                    </Grid>
+
+                    <Grid x:Name="DiskGrid">
+                        <TextBlock Text="lala3"/>
+                    </Grid>
+                </StackPanel>
+                    
+                <StackPanel Grid.Column="1"
+                            Background="#111111">
+                    <TextBlock Text="lala"/>
+                </StackPanel>
+            </Grid>
+        <!--Dolny pasek z wszyszystkim-->
+            <Grid Background="#1A1A1A"
+                    Grid.Row="1">
+                <TextBlock Text="lalla"/>     
+            </Grid>
+        </Grid>
+    
+    </Grid>
+    <!-- <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/> -->
+   
 </Window>

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using ExCSS;
 
 namespace NoNameMusicApp.Views;
 
@@ -10,6 +11,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        StartTabs();
     }
     private void DraggableAreaPointerPressed(object sender,PointerPressedEventArgs e)
     {
@@ -36,6 +38,30 @@ public partial class MainWindow : Window
     private void CloseButtonClick(object sender,RoutedEventArgs e)
     {
         Close();
+    }
+    private void ChangeToDetailsClick(object sender,RoutedEventArgs e)
+    {
+        DetailsGrid.IsVisible = true;
+        LibraryGrid.IsVisible = false;
+        DiskGrid.IsVisible = false;
+    }
+    private void ChangeToLibraryClick(object sender,RoutedEventArgs e)
+    {
+        DetailsGrid.IsVisible = false;
+        LibraryGrid.IsVisible = true;
+        DiskGrid.IsVisible = false;
+    }
+    private void ChangeToDiskClick(object sender,RoutedEventArgs e)
+    {
+        DetailsGrid.IsVisible = false;
+        LibraryGrid.IsVisible = false;
+        DiskGrid.IsVisible = true;
+    }
+    private void StartTabs()
+    {
+        DetailsGrid.IsVisible = false;
+        LibraryGrid.IsVisible = true;
+        DiskGrid.IsVisible = false;
     }
     
 }
