@@ -489,6 +489,19 @@
           }
         }
       },
+      "LibVLCSharp/3.9.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/LibVLCSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LibVLCSharp.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "MicroCom.Runtime/0.11.0": {
         "type": "package",
         "compile": {
@@ -1386,6 +1399,54 @@
         "runtimes/win-x86/native/libHarfBuzzSharp.dll"
       ]
     },
+    "LibVLCSharp/3.9.0": {
+      "sha512": "wydvN5kotK5y/ZRC04/F6YUqesJCzdixaItRkR8L0/nOLSs2/BJ7rKRbU7BxkxpKIBqlN8EpuXxH/fQEZEHtuw==",
+      "type": "package",
+      "path": "libvlcsharp/3.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/monoandroid81/LibVLCSharp.Android.AWindow.dll",
+        "lib/monoandroid81/LibVLCSharp.dll",
+        "lib/monoandroid81/LibVLCSharp.xml",
+        "lib/net40/LibVLCSharp.dll",
+        "lib/net40/LibVLCSharp.xml",
+        "lib/net471/LibVLCSharp.dll",
+        "lib/net471/LibVLCSharp.xml",
+        "lib/net6.0-windows10.0.17763/LibVLCSharp.dll",
+        "lib/net6.0-windows10.0.17763/LibVLCSharp.pri",
+        "lib/net6.0-windows10.0.17763/LibVLCSharp.xml",
+        "lib/net6.0/LibVLCSharp.dll",
+        "lib/net6.0/LibVLCSharp.xml",
+        "lib/net8.0-android34.0/LibVLCSharp.dll",
+        "lib/net8.0-android34.0/LibVLCSharp.xml",
+        "lib/net8.0-ios17.2/LibVLCSharp.dll",
+        "lib/net8.0-ios17.2/LibVLCSharp.xml",
+        "lib/net8.0-windows10.0.19041/LibVLCSharp.dll",
+        "lib/net8.0-windows10.0.19041/LibVLCSharp.pri",
+        "lib/net8.0-windows10.0.19041/LibVLCSharp.xml",
+        "lib/net8.0/LibVLCSharp.dll",
+        "lib/net8.0/LibVLCSharp.xml",
+        "lib/netstandard1.1/LibVLCSharp.dll",
+        "lib/netstandard1.1/LibVLCSharp.xml",
+        "lib/netstandard2.0/LibVLCSharp.dll",
+        "lib/netstandard2.0/LibVLCSharp.xml",
+        "lib/netstandard2.1/LibVLCSharp.dll",
+        "lib/netstandard2.1/LibVLCSharp.xml",
+        "lib/uap10.0.18362/LibVLCSharp.dll",
+        "lib/uap10.0.18362/LibVLCSharp.pri",
+        "lib/uap10.0.18362/LibVLCSharp.xml",
+        "lib/uap10.0.18362/LibVLCSharp/LibVLCSharp.xr.xml",
+        "lib/xamarinios10/LibVLCSharp.dll",
+        "lib/xamarinios10/LibVLCSharp.xml",
+        "lib/xamarinmac20/LibVLCSharp.dll",
+        "lib/xamarinmac20/LibVLCSharp.xml",
+        "libvlcsharp.3.9.0.nupkg.sha512",
+        "libvlcsharp.nuspec"
+      ]
+    },
     "MicroCom.Runtime/0.11.0": {
       "sha512": "MEnrZ3UIiH40hjzMDsxrTyi8dtqB5ziv3iBeeU4bXsL/7NLSal9F1lZKpK+tfBRnUoDSdtcW3KufE4yhATOMCA==",
       "type": "package",
@@ -1759,6 +1820,7 @@
       "Avalonia.Svg.Skia >= 11.1.0.1",
       "Avalonia.Themes.Fluent >= 11.1.0",
       "CommunityToolkit.Mvvm >= 8.2.1",
+      "LibVLCSharp >= 3.9.0",
       "Svg.Skia >= 2.0.0.1"
     ]
   },
@@ -1830,6 +1892,10 @@
           "CommunityToolkit.Mvvm": {
             "target": "Package",
             "version": "[8.2.1, )"
+          },
+          "LibVLCSharp": {
+            "target": "Package",
+            "version": "[3.9.0, )"
           },
           "Svg.Skia": {
             "target": "Package",

@@ -118,7 +118,7 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
+        <!--Wszystkie mniejsze sekcje w tabach-->
                 <StackPanel Grid.Column="0"
                             Background="#252525">
                     <Grid x:Name="DetailsGrid">
@@ -142,11 +142,12 @@
         <!--Dolny pasek z wszyszystkim-->
             <Grid Background="#1A1A1A"
                     Grid.Row="1">
-                <TextBlock Text="lalla"/>     
+                <TextBlock Text="lalla"/>
+                <Button Click="OnPlayMusicButtonClick"
+                        Content="laal"/>   
             </Grid>
         </Grid>
     
     </Grid>
-    <!-- <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/> -->
-   
+    <!-- <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/> -->  
 </Window>

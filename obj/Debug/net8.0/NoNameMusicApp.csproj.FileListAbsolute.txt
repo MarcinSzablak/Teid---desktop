@@ -75,3 +75,4 @@
 /home/ib2r5i/AvaloniaProjects/NoNameMusicApp---desktop/bin/Debug/net8.0/Avalonia.Svg.Skia.dll
 /home/ib2r5i/AvaloniaProjects/NoNameMusicApp---desktop/bin/Debug/net8.0/SkiaSharp.HarfBuzz.dll
 /home/ib2r5i/AvaloniaProjects/NoNameMusicApp---desktop/bin/Debug/net8.0/Svg.Skia.dll
+/home/ib2r5i/AvaloniaProjects/NoNameMusicApp---desktop/bin/Debug/net8.0/LibVLCSharp.dll

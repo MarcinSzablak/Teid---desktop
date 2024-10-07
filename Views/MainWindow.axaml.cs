@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using ExCSS;
+using NoNameMusicApp.ViewModels;
 
 namespace NoNameMusicApp.Views;
 
@@ -12,6 +12,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         StartTabs();
+        DataContext = new MainWindowViewModel();
     }
     private void DraggableAreaPointerPressed(object sender,PointerPressedEventArgs e)
     {
@@ -64,4 +65,8 @@ public partial class MainWindow : Window
         DiskGrid.IsVisible = false;
     }
     
+    private void OnPlayMusicButtonClick(object sender, RoutedEventArgs e)
+    {
+        ((MainWindowViewModel)DataContext).PlayMusicButtonClick(sender, e);
+    }
 }
