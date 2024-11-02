@@ -3,7 +3,7 @@ from tkinter import ttk
 
 class Top_Bar_Tabs(tk.Frame):
     def __init__(self,parent):
-        super().__init__(parent,background="purple",width=350,height=50)    
+        super().__init__(parent,background="#1A1A1A",width=350,height=50)    
         self.details=tk.Button(self,text="Details")
         self.library=tk.Button(self,text="Library")
         self.disk=tk.Button(self,text="Disk")

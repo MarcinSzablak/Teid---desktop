@@ -16,10 +16,10 @@ class Main_Window(tk.Tk):
         self.geometry("1280x720")
         self.minsize(960, 506)
 
-        self.frame_top = tk.Frame(self, background="white")
-        self.frame_bottom = tk.Frame(self, background="red")
-        self.frame_left = tk.Frame(self, background="yellow")
-        self.frame_right = tk.Frame(self, background="blue")
+        self.frame_top = tk.Frame(self, background="#1A1A1A")
+        self.frame_bottom = tk.Frame(self, background="#1A1A1A")
+        self.frame_left = tk.Frame(self, background="#252525")
+        self.frame_right = tk.Frame(self, background="#111111")
 
         self.top_menu=Top_Bar_Tabs(self.frame_top)
         self.top_menu.set_menu_buttons()
