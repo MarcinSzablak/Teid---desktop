@@ -5,11 +5,13 @@ import platform
 
 from components.windows_titlebar_fix import Windows_Titlebar_fix
 from components.top_bar_tabs import Top_Bar_Tabs
+from components.tabs_views import Tabs_Views
+from components.top_bar import Top_Bar
 
-pygame.mixer.init()
-sound = pygame.mixer.Sound('assets/Rogue-Dreams.mp3')
-sound.set_volume(0.2)
-sound.play()
+# pygame.mixer.init()
+# sound = pygame.mixer.Sound('assets/Rogue-Dreams.mp3')
+# sound.set_volume(0.2)
+# sound.play()
 
 class Main_Window(tk.Tk):
     def __init__(self):
@@ -25,8 +27,14 @@ class Main_Window(tk.Tk):
         self.frame_left = tk.Frame(self, background="#252525")
         self.frame_right = tk.Frame(self, background="#111111")
 
-        self.top_menu=Top_Bar_Tabs(self.frame_top)
-        self.top_menu.set_menu_buttons()
+        
+        self.top_bar=Top_Bar(self.frame_left)
+        self.tabs_views=Tabs_Views(self.frame_left)
+        self.top_menu=Top_Bar_Tabs(self.frame_top,
+                                   self.tabs_views.change_to_details,
+                                   self.tabs_views.change_to_library,
+                                   self.tabs_views.change_to_disk)
+        
         self.top_menu.bind("<Configure>", lambda e: self.top_menu.set_center_top_menu(self.frame_top.winfo_height))
 
     def set_frame_expands(self):
@@ -43,11 +51,14 @@ class Main_Window(tk.Tk):
         self.frame_right.config(width=right_width)
     
     def set_widgets(self):
-        
         self.frame_top.pack(side="top", fill="x")
         self.frame_bottom.pack(side="bottom", fill="x")
         self.frame_left.pack(side="left", fill="y")
         self.frame_right.pack(side="left", fill="y")
+
+        self.top_menu.set_menu_buttons()
+        self.top_bar.set_top_bar()
+        self.tabs_views.set_tabs()
     
     def start_app(self):
         self.bind("<Configure>", lambda e: self.set_frame_expands())
