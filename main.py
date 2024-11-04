@@ -4,9 +4,9 @@ import pygame
 import platform
 
 from components.windows_titlebar_fix import Windows_Titlebar_fix
-from components.top_bar_tabs import Top_Bar_Tabs
-from components.tabs_views import Tabs_Views
-from components.top_bar import Top_Bar
+from components.titlebar_tabs import Top_Bar_Tabs
+from components.main_content.tabs_views import Tabs_Views
+from components.main_content.top_bar import Top_Bar
 
 # pygame.mixer.init()
 # sound = pygame.mixer.Sound('assets/Rogue-Dreams.mp3')
