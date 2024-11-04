@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 import pygame
-from ctypes import *
 import platform
 
+from components.windows_titlebar_fix import Windows_Titlebar_fix
 from components.top_bar_tabs import Top_Bar_Tabs
 
 pygame.mixer.init()
@@ -18,16 +18,7 @@ class Main_Window(tk.Tk):
         self.geometry("1280x720")
         self.minsize(960, 506)
         if platform.system() == "Windows":
-            self.update()
-            DWMWA_USE_IMMERSIVE_DARK_MODE = 20
-            set_window_attribute = windll.dwmapi.DwmSetWindowAttribute
-            get_parent = windll.user32.GetParent
-            hwnd = get_parent(self.winfo_id())
-            rendering_policy = DWMWA_USE_IMMERSIVE_DARK_MODE
-            value = 2
-            value = c_int(value)
-            set_window_attribute(hwnd, rendering_policy, byref(value),
-                                sizeof(value))
+            Windows_Titlebar_fix(self)
 
         self.frame_top = tk.Frame(self, background="#1A1A1A")
         self.frame_bottom = tk.Frame(self, background="#1A1A1A")
