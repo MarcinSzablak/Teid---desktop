@@ -9,7 +9,7 @@ class Top_Bar_Tabs(tk.Frame):
         self.disk=tk.Button(self,text="Disk")
 
     def set_center_top_menu(self,parent_height):
-        self.config(pady=(parent_height()*0.02))
+        self.config(pady=(parent_height()*0.20))
 
     def set_menu_buttons(self):
         self.pack()
