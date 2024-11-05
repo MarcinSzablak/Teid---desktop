@@ -4,7 +4,7 @@ import pygame
 import platform
 
 from components.windows_titlebar_fix import Windows_Titlebar_fix
-from components.titlebar_tabs import Top_Bar_Tabs
+from components.titlebar_tabs import Titlebar_Tabs
 from components.main_content.tabs_views import Tabs_Views
 from components.main_content.top_bar import Top_Bar
 
@@ -30,22 +30,19 @@ class Main_Window(tk.Tk):
         
         self.top_bar=Top_Bar(self.frame_left)
         self.tabs_views=Tabs_Views(self.frame_left)
-        self.top_menu=Top_Bar_Tabs(self.frame_top,
+        self.titlebar_menu=Titlebar_Tabs(self.frame_top,
                                    self.tabs_views.change_to_details,
                                    self.tabs_views.change_to_library,
                                    self.tabs_views.change_to_disk)
-        
-        self.top_menu.bind("<Configure>", lambda e: self.top_menu.set_center_top_menu(self.frame_top.winfo_height))
 
     def set_frame_expands(self):
         total_height = self.winfo_height()
         total_width = self.winfo_width()
-        top_height = int(total_height * 0.08)
         bottom_height = int(total_height * 0.10)
         left_width = int(total_width * 0.8)
         right_width = int(total_width * 0.21)
 
-        self.frame_top.config(height=top_height)
+        self.frame_top.config(height=60)
         self.frame_bottom.config(height=bottom_height)
         self.frame_left.config(width=left_width)
         self.frame_right.config(width=right_width)
@@ -56,7 +53,7 @@ class Main_Window(tk.Tk):
         self.frame_left.pack(side="left", fill="y")
         self.frame_right.pack(side="left", fill="y")
 
-        self.top_menu.set_menu_buttons()
+        self.titlebar_menu.set_menu_buttons()
         self.top_bar.set_top_bar()
         self.tabs_views.set_tabs()
     
