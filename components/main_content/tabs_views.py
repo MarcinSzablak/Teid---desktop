@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import customtkinter as ctk
 
 class Tabs_Views(tk.Frame):
     def __init__(self,parent):
