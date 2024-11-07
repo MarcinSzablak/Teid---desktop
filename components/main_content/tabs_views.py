@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from ..library.load_files import Load_Files
 
 class Tabs_Views(tk.Frame):
     def __init__(self,parent):
@@ -28,6 +29,7 @@ class Tabs_Views(tk.Frame):
 
         label2 = ttk.Label(self.disk, text="3")
         label2.pack(pady=20)
+        Load_Files()
 
     def change_to_details(self):
         self.details.pack(expand=True, fill='both')
