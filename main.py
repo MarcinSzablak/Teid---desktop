@@ -19,6 +19,7 @@ class Main_Window(tk.Tk):
         self.title("Teid")
         self.geometry("1280x720")
         self.minsize(960, 506)
+        self.config(background="#222222")
         if platform.system() == "Windows":
             Windows_Titlebar_fix(self)
 
