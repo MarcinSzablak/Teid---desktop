@@ -4,8 +4,8 @@ class Album:
         self.cover = cover
         self.song_list = song_list
 
-        print(f"Album: {self.album_name}")
-        print(f"Cover: {self.cover}")
-        print("Songs:")
-        for song in self.song_list:
-            print(f"  - {song}")
+        # print(f"Album: {self.album_name}")
+        # print(f"Cover: {self.cover}")
+        # print("Songs:")
+        # for song in self.song_list:
+        #     print(f"  - {song}")

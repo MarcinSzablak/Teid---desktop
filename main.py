@@ -35,7 +35,7 @@ class Main_Window(tk.Tk):
                                    self.tabs_views.change_to_details,
                                    self.tabs_views.change_to_library,
                                    self.tabs_views.change_to_disk)
-
+        
     def set_frame_expands(self):
         total_height = self.winfo_height()
         total_width = self.winfo_width()

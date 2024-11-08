@@ -32,7 +32,6 @@ class Load_Files:
 
                 file_extension = song.lower().split('.')[-1]
 
-                # Check for audio files
                 if file_extension in [ext.lower() for ext in file_extensions]:
                     song_path = os.path.join(root, song)
                     song_list.append(song_path)
@@ -40,9 +39,7 @@ class Load_Files:
                 if file_extension in ['png', 'jpg', 'jpeg',"wepp"] and not cover_image:
                     cover_image = os.path.join(root, song)
 
-            # If there are audio files, create an album
             if song_list:
-                # Remove cover image from song list if it's present
                 if cover_image and cover_image in song_list:
                     song_list.remove(cover_image)
 
