@@ -5,14 +5,17 @@ import os
 from ..album import Album
 
 class Load_Files:
-    def __init__(self):
+    def __init__(self,ask_directory=None):
         self.albums = []
-        self.asked_directory = filedialog.askdirectory(title="Select Folder with music folders")
-        
-        if self.asked_directory:
-            self.search_for_music(self.asked_directory, ["mp3", "flac", "wav", "ogg"])
+        if ask_directory == None:
+            self.asked_directory = filedialog.askdirectory(title="Select Folder with music folders")
+            
+            if self.asked_directory:
+                self.search_for_music(self.asked_directory)
+        else:
+            self.search_for_music(ask_directory)
 
-    def search_for_music(self, root_dir, file_extensions):
+    def search_for_music(self, root_dir, file_extensions=["mp3", "flac", "wav", "ogg"]):
         self.albums = []
 
         for root, dirs, files in os.walk(root_dir):

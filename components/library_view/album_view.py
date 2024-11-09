@@ -8,7 +8,10 @@ class Album_View(tk.Button):
     def __init__(self,parent,album,size):
         super().__init__(parent,
                          text=album.album_name,
-                         width=size,height=size)
+                         width=size,height=size,
+                         bd=0,relief="flat",
+                         highlightbackground="#222222",
+                         background="#1A1A1A",activebackground="#1A1A1A")
         
         if not album.cover:
             cover_image = Image.open("assets/defaultcover.png")
