@@ -7,7 +7,7 @@ class Top_Bar(tk.Frame):
     def __init__(self,parent):
         super().__init__(parent)
         self.config(height=50,background="#252525")
-        self.name_of_album = tk.Label(self,text="lalaa llalala lalalall",# #FE33A1
+        self.name_of_album = tk.Label(self,text="Name of The Album",# #FE33A1
                                       font=font.Font(family="Arial",size=20),
                                       background="#252525",
                                       foreground="#FFFFFF")
