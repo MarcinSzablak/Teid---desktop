@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from ..library_view.view_album import View_Album
+from ..library_view.load_albums import Load_Albums
 
 class Tabs_Views(tk.Frame):
     def __init__(self,parent):
@@ -24,7 +24,7 @@ class Tabs_Views(tk.Frame):
         label1 = ttk.Label(self.details, text="1")
         label1.pack(pady=20)
 
-        self.view_album = View_Album(self.library)
+        self.view_album = Load_Albums(self.library)
         self.view_album.pack(expand=True, fill='both')
         self.view_album.set_view_album()
 

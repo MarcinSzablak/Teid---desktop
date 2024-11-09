@@ -2,9 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import font
 from PIL import Image, ImageTk
-from ..library_view.load_files import Load_Files
+from .load_files import Load_Files
 
-class View_Album(tk.Frame):
+from ..library_view.album_view import Album_View
+
+class Load_Albums(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, background="#222222")
         self.albums = []
@@ -17,12 +19,10 @@ class View_Album(tk.Frame):
         self.load_music.config(command=lambda: self.load_albums())
 
         self.scrollable = tk.Canvas(self)
-        self.scrollable.pack(side="left", fill="both", expand=True)
 
-        scrollbar = tk.Scrollbar(self, orient="vertical", command=self.scrollable.yview)
-        scrollbar.pack(side="right", fill="y")
-
-        self.scrollable.configure(yscrollcommand=scrollbar.set)
+        self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.scrollable.yview)
+        
+        self.scrollable.configure(yscrollcommand=self.scrollbar.set)
 
         self.scrollable_holder = tk.Frame(self.scrollable)
         self.scrollable.create_window((0, 0), window=self.scrollable_holder, anchor="nw")
@@ -32,8 +32,11 @@ class View_Album(tk.Frame):
 
     def load_albums(self):
         self.albums = Load_Files().albums
-        self.load_music.pack_forget()
-        self.set_album()
+        if len(self.albums):
+            self.load_music.pack_forget()
+            self.scrollable.pack(side="left", fill="both", expand=True)
+            self.scrollbar.pack(side="right", fill="y")
+            self.set_album()
     
     def change_size(self,size):
         self.parent_size = size
@@ -52,17 +55,8 @@ class View_Album(tk.Frame):
             album_row = i // buttons_per_row
             album_col = i % buttons_per_row
 
-            label = tk.Button(self.scrollable_holder, text=f"{self.albums[i].album_name}",
-                              width=button_size, height=button_size)
-
-            if self.albums[i].cover:
-                cover_image = Image.open(self.albums[i].cover)
-                cover_image = cover_image.resize((button_size, button_size))
-                cover_photo = ImageTk.PhotoImage(cover_image)
-                label.config(image=cover_photo)
-                label.image = cover_photo
-
-            label.grid(row=album_row, column=album_col, padx=padding, pady=padding)
+            album_view = Album_View(self.scrollable_holder,self.albums[i],button_size)
+            album_view.grid(row=album_row, column=album_col, padx=padding, pady=padding)
 
         total_rows = (len(self.albums) // buttons_per_row) + (1 if len(self.albums) % buttons_per_row != 0 else 0)
         total_height = total_rows * (button_size + padding * 3)
@@ -71,4 +65,5 @@ class View_Album(tk.Frame):
             
     def set_view_album(self):
         self.load_music.pack(expand=True)
+        
         
