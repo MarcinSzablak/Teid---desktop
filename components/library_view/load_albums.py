@@ -64,17 +64,13 @@ class Load_Albums(tk.Frame):
         buttons_per_row = 5
         padding = 12
 
-        # Base button size based on the parent size
         button_size = (self.parent_size // buttons_per_row) - padding * 3
 
-        # Calculate the maximum height of a button considering wrapped text
-        max_text_lines = 3  # For example, we assume a max of 3 lines of text (adjust this based on your text)
-        line_height = 20  # Example line height (adjust this based on font size and padding)
+        max_text_lines = 3
+        line_height = 20
 
-        # Total height of each button including text wrapping
         button_height_with_text = button_size + (line_height * max_text_lines)
 
-        # Create buttons and add them to the grid
         for i in range(len(self.albums)):
             album_row = i // buttons_per_row
             album_col = i % buttons_per_row
@@ -82,15 +78,11 @@ class Load_Albums(tk.Frame):
             album_view = Album_View(self.scrollable_holder, self.albums[i], button_size)
             album_view.grid(row=album_row, column=album_col, padx=padding, pady=padding)
 
-        # Calculate total rows needed (adjust for the number of albums)
         total_rows = (len(self.albums) // buttons_per_row) + (1 if len(self.albums) % buttons_per_row != 0 else 0)
 
-        # Adjust total height to accommodate the wrapped buttons, with a small buffer at the bottom
-        # (total_rows - 1) * padding is the vertical padding between rows
-        buffer_bottom = padding * 2  # Add some extra space at the bottom of the scroll area
+        buffer_bottom = button_height_with_text * 0.8
         total_height = total_rows * button_height_with_text + (total_rows - 1) * padding + buffer_bottom
 
-        # Update the scrollable region based on the new button height and adjusted padding
         self.scrollable.config(scrollregion=(0, 0, 0, total_height))
 
     def set_view_album(self):

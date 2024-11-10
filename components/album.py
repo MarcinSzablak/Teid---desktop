@@ -3,6 +3,7 @@ class Album:
         self.album_name = album_name
         self.cover = cover
         self.song_list = song_list
+        self.band= None
 
         # print(f"Album: {self.album_name}")
         # print(f"Cover: {self.cover}")
