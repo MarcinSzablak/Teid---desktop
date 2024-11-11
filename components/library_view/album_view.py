@@ -42,8 +42,6 @@ class Album_View(tk.Frame):
                     album.band_name=str(band_name)
                 
 
-
-
         cover_image = cover_image.resize((size, size))
         cover_photo = ImageTk.PhotoImage(cover_image)
         self.cover_button.config(image=cover_photo)
