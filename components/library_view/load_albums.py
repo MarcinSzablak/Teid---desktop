@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import font
 from PIL import Image, ImageTk
 from .load_files import Load_Files
+from .data_album_view import Data_Album_View
 
 from ..library_view.album_view import Album_View
 from ..settings_dir.settings import Settings
@@ -75,7 +76,8 @@ class Load_Albums(tk.Frame):
             album_row = i // buttons_per_row
             album_col = i % buttons_per_row
 
-            album_view = Album_View(self.scrollable_holder, self.albums[i], button_size)
+            album_view = Album_View(self.scrollable_holder, self.albums[i], button_size,self.show_album_data_view)
+            album_view.set_album_view()
             album_view.grid(row=album_row, column=album_col, padx=padding, pady=padding)
 
         total_rows = (len(self.albums) // buttons_per_row) + (1 if len(self.albums) % buttons_per_row != 0 else 0)
@@ -84,6 +86,14 @@ class Load_Albums(tk.Frame):
         total_height = total_rows * button_height_with_text + (total_rows - 1) * padding + buffer_bottom
 
         self.scrollable.config(scrollregion=(0, 0, 0, total_height))
+
+    def show_album_data_view(self,album):
+        for widget in self.scrollable_holder.winfo_children():
+            widget.destroy()
+        data_from_album = Data_Album_View(self.scrollable_holder,album)
+        data_from_album.set_data_album_view()
+        self.unbind("<Configure>")
+
 
     def set_view_album(self):
         if not Settings.check_directory():

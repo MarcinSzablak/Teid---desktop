@@ -19,7 +19,6 @@ class Album:
 
             song_title = audio_file.tag.title
             if not song_title:
-                song_title="undefined"
                 song_title = song.split("\\")[-1]
                 for file_extension in [".mp3", ".flac", ".wav", ".ogg"]:
                     if song_title.endswith(file_extension):
@@ -33,10 +32,3 @@ class Album:
 
             song_data = {"title":str(song_title),"duration":float(str(duration_minutes)+"."+str(f"{remaining_seconds:02d}")),"number":int(track_number)} 
             self.songs_data_list.append(song_data)
-
-        
-        # print(f"Album: {self.album_name}")
-        # print(f"Cover: {self.cover}")
-        # print("Songs:")
-        # for song in self.song_list:
-        #     print(f"  - {song}")
