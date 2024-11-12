@@ -88,9 +88,8 @@ class Load_Albums(tk.Frame):
         self.scrollable.config(scrollregion=(0, 0, 0, total_height))
 
     def show_album_data_view(self,album):
-        for widget in self.scrollable_holder.winfo_children():
-            widget.destroy()
-        data_from_album = Data_Album_View(self.scrollable_holder,album)
+        self.scrollable.pack_forget()
+        data_from_album = Data_Album_View(self,album)
         data_from_album.set_data_album_view()
         self.unbind("<Configure>")
 
