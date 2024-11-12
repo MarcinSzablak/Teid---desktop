@@ -8,7 +8,7 @@ class Top_Bar(tk.Frame):
     def __init__(self,parent):
         super().__init__(parent)
         self.config(height=50,background="#252525")
-        self.name_of_album = tk.Label(self,text="Name of The Album",# #FE33A1
+        self.name_of_album = tk.Label(self,text="",# #FE33A1
                                       font=font.Font(family="Arial",size=20),
                                       background="#252525",
                                       foreground="#FFFFFF")
@@ -47,7 +47,7 @@ class Top_Bar(tk.Frame):
                     album_title = audio_file.tag.album
                     self.name_of_album.config(text=str(album_title))
     def unset_album_name(self):
-        self.name_of_album.config(text="Name of The Album")
+        self.name_of_album.config(text="")
 
     def back_to_albums(self,albums_list,album_data):
         albums_list.pack(fill="both", expand=True,padx=(15,0))
