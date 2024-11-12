@@ -6,7 +6,6 @@ import platform
 from components.windows_titlebar_fix import Windows_Titlebar_fix
 from components.titlebar_tabs import Titlebar_Tabs
 from components.main_content.tabs_views import Tabs_Views
-from components.main_content.top_bar import Top_Bar
 
 # pygame.mixer.init()
 # sound = pygame.mixer.Sound('assets/Rogue-Dreams.mp3')
@@ -29,7 +28,6 @@ class Main_Window(tk.Tk):
         self.frame_right = tk.Frame(self, background="#111111")
 
         
-        self.top_bar=Top_Bar(self.frame_left)
         self.tabs_views=Tabs_Views(self.frame_left)
         self.titlebar_menu=Titlebar_Tabs(self.frame_top,
                                    self.tabs_views.change_to_details,
@@ -55,7 +53,6 @@ class Main_Window(tk.Tk):
         self.frame_right.pack(side="left", fill="y")
 
         self.titlebar_menu.set_menu_buttons()
-        self.top_bar.set_top_bar()
         self.tabs_views.set_tabs()
     
     def start_app(self):

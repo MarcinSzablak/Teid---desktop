@@ -2,16 +2,20 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import font
 from PIL import Image, ImageTk
+
 from .load_files import Load_Files
 from .data_album_view import Data_Album_View
-
 from ..library_view.album_view import Album_View
 from ..settings_dir.settings import Settings
+from .top_bar import Top_Bar
 
 class Load_Albums(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, background="#222222")
         self.albums = []
+
+        self.top_bar=Top_Bar(self)
+        self.data_from_album = None
 
         self.load_music = tk.Button(self, text="Load Music", background="#1A1A1A",
                                      foreground="#FFFFFF", highlightbackground="#1A1A1A",
@@ -48,6 +52,8 @@ class Load_Albums(tk.Frame):
         loaded_files = Load_Files()
         self.albums = loaded_files.albums
         Settings.set_directory(loaded_files.asked_directory)
+        self.top_bar.set_top_bar()
+        self.top_bar.back_image_holder.pack_forget()
         if len(self.albums):
             self.load_music.pack_forget()
             self.scrollable.pack(fill="both", expand=True,padx=(15,0)) # side="left", 
@@ -89,9 +95,11 @@ class Load_Albums(tk.Frame):
 
     def show_album_data_view(self,album):
         self.scrollable.pack_forget()
-        data_from_album = Data_Album_View(self,album)
-        data_from_album.set_data_album_view()
-        self.unbind("<Configure>")
+        self.data_from_album = Data_Album_View(self,album)
+        self.data_from_album.set_data_album_view()
+        self.top_bar.set_album_name(album)
+        self.top_bar.set_back_button()
+        self.top_bar.back_image_holder.config(command=lambda:self.top_bar.back_to_albums(self.scrollable,self.data_from_album))
 
 
     def set_view_album(self):
@@ -99,6 +107,8 @@ class Load_Albums(tk.Frame):
             self.load_music.pack(expand=True)
         else:
             self.albums = Load_Files(ask_directory=Settings.get_directory()).albums
+            self.top_bar.set_top_bar()
+            self.top_bar.back_image_holder.pack_forget()
             self.scrollable.pack(fill="both", expand=True,padx=(15,0))
 
         
