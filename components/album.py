@@ -8,9 +8,9 @@ class Album:
         self.song_list = song_list
         self.songs_data_list = []
         
-        for song in song_list:
+        for song_uri in song_list:
             song_data= None
-            audio_file = eyed3.load(song)
+            audio_file = eyed3.load(song_uri)
 
             if audio_file.tag:
                 for tag in audio_file.tag.frame_set:
@@ -28,10 +28,12 @@ class Album:
 
             song_title = audio_file.tag.title
             if not song_title:
-                song_title = song.split("\\")[-1]
+                song_title = song_uri.split("/")[-1]
+                song_title = song_title.strip()
+                
                 for file_extension in [".mp3", ".flac", ".wav", ".ogg"]:
-                    if song_title.endswith(file_extension):
-                        song_title = song_title.replace(file_extension, "")
+                    if song_title.lower().endswith(file_extension.lower()):
+                        song_title = song_title[:-len(file_extension)]
                         break
 
             track_num = audio_file.tag.track_num
@@ -39,5 +41,8 @@ class Album:
             if track_num[0]:
                 track_number = track_num[0]
 
-            song_data = {"title":str(song_title),"duration":float(str(duration_minutes)+"."+str(f"{remaining_seconds:02d}")),"number":int(track_number)} 
+            song_data = {"title":str(song_title),
+                         "duration":float(str(duration_minutes)+"."+str(f"{remaining_seconds:02d}")),
+                         "number":int(track_number),
+                         "url":str(song_uri)} 
             self.songs_data_list.append(song_data)

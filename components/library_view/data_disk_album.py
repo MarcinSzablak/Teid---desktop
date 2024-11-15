@@ -34,7 +34,7 @@ class Data_Disk_Album(tk.Frame):
 
 
     def set_data_disk_album(self):
-        self.pack(fill="x",padx=20,pady=10)
+        self.pack(fill="x",padx=20,pady=10,side="top")
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
