@@ -1,4 +1,5 @@
 import eyed3 # type: ignore
+import io
 class Album:
     def __init__(self, album_name, cover, song_list):
         self.album_name = album_name
@@ -6,9 +7,17 @@ class Album:
         self.band = None
         self.song_list = song_list
         self.songs_data_list = []
+        
         for song in song_list:
             song_data= None
             audio_file = eyed3.load(song)
+
+            if audio_file.tag:
+                for tag in audio_file.tag.frame_set:
+                    frame = audio_file.tag.frame_set[tag][0]
+                    if tag == b'APIC':
+                        image_data = frame.image_data
+                        self.cover = io.BytesIO(image_data)
 
             duration_seconds = audio_file.info.time_secs
             if not duration_seconds:
