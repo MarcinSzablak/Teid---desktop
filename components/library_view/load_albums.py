@@ -1,115 +1,161 @@
 import tkinter as tk
-from tkinter import ttk
 from tkinter import font
 from PIL import Image, ImageTk
-
 from .load_files import Load_Files
 from .data_album_view import Data_Album_View
 from ..library_view.album_view import Album_View
 from ..settings_dir.settings import Settings
 from .top_bar import Top_Bar
+import threading
 
 class Load_Albums(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, background="#222222")
         self.albums = []
-
-        self.top_bar=Top_Bar(self)
         self.data_from_album = None
-
-        self.load_music = tk.Button(self, text="Load Music", background="#1A1A1A",
-                                     foreground="#FFFFFF", highlightbackground="#1A1A1A",
-                                     bd=0, relief="flat", font=font.Font(family="Arial", size=12),
-                                     activebackground='#4B65A9', activeforeground="#FFFFFF",padx=10,pady=10)
-
-        self.load_music.config(command=lambda: self.load_albums_handler())
-
-        self.scrollable = tk.Canvas(self, background="#222222", bd=0, highlightthickness=0)
-
-        self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.scrollable.yview,
-                                      background="#222222", troughcolor="#222222", width=12,
-                                      activebackground="#222222",highlightbackground="#222222")
-        self.scrollable.configure(yscrollcommand=self.scrollbar.set)
-
-        self.scrollable_holder = tk.Frame(self.scrollable, background="#222222")
-        self.scrollable.create_window((0, 0), window=self.scrollable_holder, anchor="nw")
-
         self.parent_size = self.winfo_width()
-        self.bind('<Configure>', lambda event: self.change_size(event.width))
 
-        self.scrollable.bind_all("<MouseWheel>", self.on_mouse_wheel)
-        self.scrollable.bind_all("<Button-4>", self.on_mouse_wheel)
-        self.scrollable.bind_all("<Button-5>", self.on_mouse_wheel)
+        # Initialize and pack the Top_Bar
+        self.top_bar = Top_Bar(self)
+        self.top_bar.pack(side="top", fill="x")
+
+        # Load music button
+        self.load_music_button = tk.Button(
+            self, text="Load Music", background="#1A1A1A", foreground="#FFFFFF",
+            font=font.Font(family="Arial", size=12), bd=0, relief="flat",
+            activebackground='#4B65A9', activeforeground="#FFFFFF",
+            command=self.load_albums_handler, padx=10, pady=10
+        )
+
+        # Scrollable area for albums
+        self.scrollable_canvas = tk.Canvas(self, background="#222222", bd=0, highlightthickness=0)
+        self.scrollable_holder = tk.Frame(self.scrollable_canvas, background="#222222")
+        self.scrollable_canvas.create_window((0, 0), window=self.scrollable_holder, anchor="nw")
+
+        self.scrollbar = tk.Scrollbar(
+            self, orient="vertical", command=self.scrollable_canvas.yview,
+            background="#222222", troughcolor="#222222", width=12,
+            activebackground="#222222", highlightbackground="#222222"
+        )
+        self.scrollable_canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        # Event bindings
+        self.bind('<Configure>', self.update_layout)
+
+        # Mouse wheel event binding
+        self.scrollable_canvas.bind_all("<MouseWheel>", self.on_mouse_wheel)
+
+        # Thread management
+        self.album_loading_thread = None  # Keep track of the album loading thread
+        self.is_loading = False  # Flag to prevent redundant loading
 
     def on_mouse_wheel(self, event):
-        delta = event.delta if event.delta else 0
-        if event.num == 5 or delta < 0:
-            self.scrollable.yview_scroll(1, "units")
-        elif event.num == 4 or delta > 0:
-            self.scrollable.yview_scroll(-1, "units")
+        """Handle mouse wheel scrolling for the scrollable canvas."""
+        scroll_amount = -1 if event.delta > 0 else 1
+        self.scrollable_canvas.yview_scroll(scroll_amount, "units")
 
     def load_albums_handler(self):
+        """Handler to load albums when the 'Load Music' button is clicked."""
+        if self.is_loading:
+            return  # Prevent redundant loading
+        self.is_loading = True
+        self.load_music_button.config(state=tk.DISABLED)  # Disable button while loading
+
+        # Start loading albums in a separate thread
+        if self.album_loading_thread and self.album_loading_thread.is_alive():
+            self.album_loading_thread.join()  # Ensure previous thread is completed before starting a new one
+
+        self.album_loading_thread = threading.Thread(target=self.load_albums_thread)
+        self.album_loading_thread.daemon = True  # Ensures the thread will close when the app is closed
+        self.album_loading_thread.start()
+
+    def load_albums_thread(self):
+        """Threaded method to load albums."""
         loaded_files = Load_Files()
         self.albums = loaded_files.albums
         Settings.set_directory(loaded_files.asked_directory)
-        self.top_bar.set_top_bar()
-        self.top_bar.back_image_holder.pack_forget()
-        if len(self.albums):
-            self.load_music.pack_forget()
-            self.scrollable.pack(fill="both", expand=True,padx=(15,0)) # side="left", 
-            # self.scrollbar.pack(side="right", fill="y")
-            self.set_album()
-    
-    def change_size(self,size):
-        self.parent_size = size
-        self.set_album()
 
-    def set_album(self):
+        # Use after() to update the UI from the main thread
+        self.after(0, self.update_ui_after_loading)
+
+    def update_ui_after_loading(self):
+        """Update the UI after albums are loaded."""
+        self.is_loading = False  # Reset the loading flag
+
+        if self.albums:
+            self.load_music_button.pack_forget()
+            self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
+            self.display_albums()
+        else:
+            self.load_music_button.pack(expand=True)  # Redisplay button if no albums found
+
+        self.top_bar.set_top_bar()
+
+    def display_albums(self):
+        """Populate the scrollable area with album views."""
+        # Clear existing widgets in the scrollable area
         for widget in self.scrollable_holder.winfo_children():
             widget.destroy()
-        
+
+        # Layout calculation
         buttons_per_row = 5
         padding = 12
-
         button_size = (self.parent_size // buttons_per_row) - padding * 3
 
         max_text_lines = 3
         line_height = 20
-
         button_height_with_text = button_size + (line_height * max_text_lines)
 
-        for i in range(len(self.albums)):
-            album_row = i // buttons_per_row
-            album_col = i % buttons_per_row
-
-            album_view = Album_View(self.scrollable_holder, self.albums[i], button_size,self.show_album_data_view)
+        # Create album buttons
+        for i, album in enumerate(self.albums):
+            row, col = divmod(i, buttons_per_row)
+            album_view = Album_View(self.scrollable_holder, album, button_size, self.show_album_details)
             album_view.set_album_view()
-            album_view.grid(row=album_row, column=album_col, padx=padding, pady=padding)
+            album_view.grid(row=row, column=col, padx=padding, pady=padding)
 
-        total_rows = (len(self.albums) // buttons_per_row) + (1 if len(self.albums) % buttons_per_row != 0 else 0)
-
+        # Update scrollable region
+        total_rows = -(-len(self.albums) // buttons_per_row)  # Ceiling division
         buffer_bottom = button_height_with_text * 0.8
         total_height = total_rows * button_height_with_text + (total_rows - 1) * padding + buffer_bottom
+        self.scrollable_canvas.config(scrollregion=(0, 0, 0, total_height))
 
-        self.scrollable.config(scrollregion=(0, 0, 0, total_height))
-
-    def show_album_data_view(self,album):
-        self.scrollable.pack_forget()
-        self.data_from_album = Data_Album_View(self,album)
+    def show_album_details(self, album):
+        """Display the detailed view of a selected album."""
+        self.scrollable_canvas.pack_forget()
+        self.data_from_album = Data_Album_View(self, album)
         self.data_from_album.set_data_album_view()
-        self.top_bar.set_album_name(album)
-        self.top_bar.set_back_button()
-        self.top_bar.back_image_holder.config(command=lambda:self.top_bar.back_to_albums(self.scrollable,self.data_from_album))
 
+        self.top_bar.set_album_name(album)
+        self.top_bar.set_back_button(back_callback=lambda: self.return_to_album_list())
+
+    def return_to_album_list(self):
+        """Return to the album list view from the album details view."""
+        if self.data_from_album:
+            self.data_from_album.destroy()  # Properly destroy the album view instead of pack_forget()
+            self.data_from_album = None
+
+        self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
+        self.top_bar.unset_back_button()
+
+    def update_layout(self, event):
+        """Update layout dynamically when the parent size changes."""
+        self.parent_size = event.width
+        self.display_albums()
 
     def set_view_album(self):
-        if not Settings.check_directory():
-            self.load_music.pack(expand=True)
-        else:
+        """Initialize the album view."""
+        if Settings.check_directory():
             self.albums = Load_Files(ask_directory=Settings.get_directory()).albums
-            self.top_bar.set_top_bar()
-            self.top_bar.back_image_holder.pack_forget()
-            self.scrollable.pack(fill="both", expand=True,padx=(15,0))
+            self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
+            self.display_albums()
+        else:
+            self.load_music_button.pack(expand=True)
 
-        
-        
+    def clear_resources(self):
+        """Clear unnecessary resources when transitioning away from the album view."""
+        self.albums = []  # Clear albums to release memory
+        self.scrollable_canvas.pack_forget()  # Remove the canvas when switching views
+
+    def get_all_albums(self):
+        """Returns the list of all loaded albums."""
+        return self.albums
