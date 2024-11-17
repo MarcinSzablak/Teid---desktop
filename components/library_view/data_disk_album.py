@@ -22,11 +22,11 @@ class Data_Disk_Album(tk.Frame):
         all_time_seconds = 0
         for song in album.songs_data_list:
             # If duration is a string in MM:SS format, split it
-            if isinstance(song["duration"], str) and ":" in song["duration"]:
-                minutes, seconds = map(int, song["duration"].split(":"))
+            if isinstance(float(song["duration"]), str) and ":" in float(song["duration"]):
+                minutes, seconds = map(int, float(song["duration"]).split(":"))
             else:
-                minutes = int(song["duration"])  # assuming it's in minutes
-                seconds = int((song["duration"] * 100) % 100)
+                minutes = int(float(song["duration"]))  # assuming it's in minutes
+                seconds = int((float(song["duration"]) * 100) % 100)
             total_seconds = minutes * 60 + seconds
             all_time_seconds += total_seconds
 
