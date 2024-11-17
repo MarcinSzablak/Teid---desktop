@@ -44,6 +44,8 @@ class Load_Albums(tk.Frame):
 
         # Mouse wheel event binding
         self.scrollable_canvas.bind_all("<MouseWheel>", self.on_mouse_wheel)
+        self.scrollable_canvas.bind_all("<Button-4>", self.on_mouse_wheel)
+        self.scrollable_canvas.bind_all("<Button-5>", self.on_mouse_wheel)
 
         # Thread management
         self.album_loading_thread = None  # Keep track of the album loading thread
@@ -51,8 +53,10 @@ class Load_Albums(tk.Frame):
 
     def on_mouse_wheel(self, event):
         """Handle mouse wheel scrolling for the scrollable canvas."""
-        scroll_amount = -1 if event.delta > 0 else 1
-        self.scrollable_canvas.yview_scroll(scroll_amount, "units")
+        if event.delta > 0 or event.num == 4:  # Mouse wheel up (Windows/macOS/Linux)
+            self.scrollable_canvas.yview_scroll(-1, "units")  # Scroll up
+        elif event.delta < 0 or event.num == 5:  # Mouse wheel down (Windows/macOS/Linux)
+            self.scrollable_canvas.yview_scroll(1, "units")  # Scroll down
 
     def load_albums_handler(self):
         """Handler to load albums when the 'Load Music' button is clicked."""

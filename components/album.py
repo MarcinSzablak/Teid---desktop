@@ -48,12 +48,15 @@ class Album:
             song_title = audio_file.tag.title or self._sanitize_filename(song_uri)
 
             # Extract track number
-            track_number = audio_file.tag.track_num[0] if audio_file.tag.track_num else 0
+            if audio_file.tag.track_num[0]==None:
+                track_number=0
+            else:
+                track_number = audio_file.tag.track_num[0]
 
             # Append song data
             self.songs_data_list.append({
                 "title": str(song_title),
-                "duration": float(f"{duration_minutes}.{remaining_seconds:02d}"),
+                "duration": str(f"{duration_minutes}.{remaining_seconds:02d}"),
                 "number": track_number,
                 "url": str(song_uri)
             })
