@@ -135,7 +135,7 @@ class Load_Albums(tk.Frame):
     def return_to_album_list(self):
         """Return to the album list view from the album details view."""
         if self.data_from_album:
-            self.data_from_album.destroy()  # Properly destroy the album view instead of pack_forget()
+            self.data_from_album.destroy()
             self.data_from_album = None
 
         self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))

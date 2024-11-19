@@ -47,6 +47,9 @@ class Album:
             # Extract title and sanitize it if missing
             song_title = audio_file.tag.title or self._sanitize_filename(song_uri)
 
+            #add artist
+            self.band = audio_file.tag.artist or "None"
+
             # Extract track number
             if audio_file.tag.track_num[0]==None:
                 track_number=0

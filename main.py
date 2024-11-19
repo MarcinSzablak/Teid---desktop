@@ -37,7 +37,7 @@ class Main_Window(tk.Tk):
         )
 
         # Precompute layout ratios to avoid recalculating on every resize
-        self.bottom_ratio = 0.10
+        self.bottom_ratio = 0.13
         self.left_ratio = 0.8
         self.right_ratio = 0.21
 

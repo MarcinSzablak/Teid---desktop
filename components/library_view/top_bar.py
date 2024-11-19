@@ -3,6 +3,8 @@ from tkinter import font
 from PIL import Image, ImageTk
 import eyed3  # type: ignore
 
+from .pop_ups.filter_pop_up import Filter_Pop_Up
+
 class Top_Bar(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -22,7 +24,6 @@ class Top_Bar(tk.Frame):
         self.search_bar = tk.Entry(self.search_bar_border, font=font.Font(family="Arial", size=16),
                                    background="#252525", foreground="#FFFFFF", relief="flat")
         self.search_bar.pack(pady=2, padx=2)
-        self.search_bar_border.pack(side="left", pady=5, padx=(30, 3))
 
         # Swap button
         self.swap_image = ImageTk.PhotoImage(Image.open("assets/swap.png").resize((40, 40)))
@@ -30,21 +31,30 @@ class Top_Bar(tk.Frame):
                                            background="#252525", relief="flat",
                                            highlightbackground="#252525", bd=0,
                                            activebackground='#252525')
-        self.swap_image_holder.pack(side="left", pady=5, padx=3)
+        
 
         # Filter button
         self.filter_image = ImageTk.PhotoImage(Image.open("assets/filter.png").resize((40, 40)))
         self.filter_image_holder = tk.Button(self, image=self.filter_image,
                                              background="#252525", relief="flat",
                                              highlightbackground="#252525", bd=0,
-                                             activebackground='#252525')
-        self.filter_image_holder.pack(side="left", pady=5, padx=3)
+                                             activebackground='#252525',
+                                             command=self.on_filter_button_clicked)
+        
 
         # Album name label (Right side)
         self.name_of_album = tk.Label(self, text="",
                                       font=font.Font(family="Arial", size=20),
                                       background="#252525", foreground="#FFFFFF")
+        
+        self.search_bar_border.pack(side="left", pady=5, padx=(30, 3))
+        self.filter_image_holder.pack(side="left", pady=5, padx=3)
+        self.swap_image_holder.pack(side="left", pady=5, padx=3)
+
         self.name_of_album.pack(side="right", padx=30, pady=5)
+
+    def on_filter_button_clicked(self):
+        Filter_Pop_Up(self)
 
     def on_back_button_clicked(self):
         """Handle back button click to return to the album list."""
@@ -62,14 +72,24 @@ class Top_Bar(tk.Frame):
         self.back_image_holder.pack(side="left", pady=5, padx=(30, 0))
         
         self.name_of_album.pack(side="right", padx=30, pady=5)
+        self.search_bar_border.pack(side="left", pady=5, padx=3)
         self.filter_image_holder.pack(side="left", pady=5, padx=3)
         self.swap_image_holder.pack(side="left", pady=5, padx=3)
-        self.search_bar_border.pack(side="left", pady=5, padx=3)
+        
 
 
     def unset_back_button(self):
         """Unset the back button and reset top bar for album list."""
         self.back_image_holder.pack_forget()
+
+        self.filter_image_holder.pack_forget()
+        self.swap_image_holder.pack_forget()
+        self.search_bar_border.pack_forget()
+
+        self.search_bar_border.pack(side="left", pady=5, padx=(30, 3))
+        self.filter_image_holder.pack(side="left", pady=5, padx=3)
+        self.swap_image_holder.pack(side="left", pady=5, padx=3)
+
         self.unset_album_name()
         
 
