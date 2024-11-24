@@ -19,10 +19,10 @@ class Filter_Pop_Up(tk.Toplevel):
         self.select_box = tk.OptionMenu(self, self.selected_option, *options)
         self.select_box.pack(pady=2)
 
-        self.selected_option.trace_add("write",self.selected_filter_option)
+        # When the value changes, call selected_filter_option()
+        self.selected_option.trace_add("write", self.selected_filter_option)
 
     def selected_filter_option(self, *args):
-        Filter_Settings.write_filter(self.selected_option.get())
-
-
-
+        # Update the filter setting and notify observers
+        new_filter = self.selected_option.get()
+        Filter_Settings.write_filter(new_filter)

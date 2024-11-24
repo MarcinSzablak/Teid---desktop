@@ -8,6 +8,7 @@ class Load_Files:
         Initialize and load music files from a specified or user-selected directory.
         """
         self.albums = []
+        self.unique_artist = []
         self.asked_directory = ask_directory or filedialog.askdirectory(title="Select Folder with Music Folders")
         
         if self.asked_directory:
@@ -63,3 +64,5 @@ class Load_Files:
 
                 album = Album(album_name, cover_image, song_list)
                 self.albums.append(album)
+                self.unique_artist.append(album.band)
+            

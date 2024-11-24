@@ -7,11 +7,13 @@ from ..library_view.album_view import Album_View
 from ..settings_dir.settings import Settings
 from .top_bar import Top_Bar
 import threading
+from ..settings_dir.filter_settings import Filter_Settings
 
 class Load_Albums(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, background="#222222")
         self.albums = []
+        self.unique_artist = []
         self.data_from_album = None
         self.parent_size = self.winfo_width()
 
@@ -51,6 +53,15 @@ class Load_Albums(tk.Frame):
         self.album_loading_thread = None  # Keep track of the album loading thread
         self.is_loading = False  # Flag to prevent redundant loading
 
+        Filter_Settings.add_observer(self.on_filter_change)
+
+    def on_filter_change(self,new_value_filter):
+        if(Filter_Settings.get_filter()=="by Artists"):
+            self.display_artists()
+        elif(Filter_Settings.get_filter()=="by Albums"):
+            self.display_albums()
+        
+
     def on_mouse_wheel(self, event):
         """Handle mouse wheel scrolling for the scrollable canvas."""
         if event.delta > 0 or event.num == 4:  # Mouse wheel up (Windows/macOS/Linux)
@@ -74,19 +85,21 @@ class Load_Albums(tk.Frame):
         self.album_loading_thread.start()
 
     def load_albums_thread(self):
-        """Threaded method to load albums."""
         loaded_files = Load_Files()
         self.albums = loaded_files.albums
+        self.unique_artist = set(loaded_files.unique_artist)
         Settings.set_directory(loaded_files.asked_directory)
-
-        # Use after() to update the UI from the main thread
         self.after(0, self.update_ui_after_loading)
+
 
     def update_ui_after_loading(self):
         """Update the UI after albums are loaded."""
         self.is_loading = False  # Reset the loading flag
-
-        if self.albums:
+        if self.unique_artist:
+            self.load_music_button.pack_forget()
+            self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
+            self.display_artists()
+        elif self.albums:
             self.load_music_button.pack_forget()
             self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
             self.display_albums()
@@ -95,12 +108,17 @@ class Load_Albums(tk.Frame):
 
         self.top_bar.set_top_bar()
 
+    def display_artists(self):
+        for widget in self.scrollable_holder.winfo_children():
+            widget.destroy()
+
+        print(self.unique_artist)
+
     def display_albums(self):
         """Populate the scrollable area with album views."""
         # Clear existing widgets in the scrollable area
         for widget in self.scrollable_holder.winfo_children():
             widget.destroy()
-
         # Layout calculation
         buttons_per_row = 5
         padding = 12
@@ -144,20 +162,30 @@ class Load_Albums(tk.Frame):
     def update_layout(self, event):
         """Update layout dynamically when the parent size changes."""
         self.parent_size = event.width
-        self.display_albums()
+        if(Filter_Settings.get_filter()=="by Artists"):
+                self.display_artists()
+        elif(Filter_Settings.get_filter()=="by Albums"):
+            self.display_albums()
 
     def set_view_album(self):
         """Initialize the album view."""
         if Settings.check_directory():
-            self.albums = Load_Files(ask_directory=Settings.get_directory()).albums
+            loaded_files = Load_Files(ask_directory=Settings.get_directory())
+            self.albums = loaded_files.albums
+            self.unique_artist = set(loaded_files.unique_artist)
             self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
-            self.display_albums()
+
+            if(Filter_Settings.get_filter()=="by Artists"):
+                self.display_artists()
+            elif(Filter_Settings.get_filter()=="by Albums"):
+                self.display_albums()
         else:
             self.load_music_button.pack(expand=True)
 
     def clear_resources(self):
         """Clear unnecessary resources when transitioning away from the album view."""
         self.albums = []  # Clear albums to release memory
+        self.unique_artist = []
         self.scrollable_canvas.pack_forget()  # Remove the canvas when switching views
 
     def get_all_albums(self):
