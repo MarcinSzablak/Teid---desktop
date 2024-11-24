@@ -9,7 +9,11 @@ class Disk_View(tk.Frame):
         self.move = False  # Rotation initially stopped
 
         # Open and process the album cover image
-        self.original_image = Image.open(album.cover)
+        self.original_image = None
+        try:
+            self.original_image = Image.open(album.cover)
+        except:
+            self.original_image = Image.open("assets/basedvd.png")
         self.dvd_image = self.create_dvd_image(self.original_image)
 
         # Create canvas to display image
