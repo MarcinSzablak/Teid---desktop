@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from .load_files import Load_Files
 from .data_album_view import Data_Album_View
 from ..library_view.album_view import Album_View
+from ..library_view.artist_view import Artist_View
 from ..settings_dir.settings import Settings
 from .top_bar import Top_Bar
 import threading
@@ -111,8 +112,31 @@ class Load_Albums(tk.Frame):
     def display_artists(self):
         for widget in self.scrollable_holder.winfo_children():
             widget.destroy()
+        """Populate the scrollable area with album views."""
+        # Clear existing widgets in the scrollable area
+        for widget in self.scrollable_holder.winfo_children():
+            widget.destroy()
+        # Layout calculation
+        buttons_per_row = 5
+        padding = 12
+        button_size = (self.parent_size // buttons_per_row) - padding * 3
 
-        print(self.unique_artist)
+        max_text_lines = 3
+        line_height = 20
+        button_height_with_text = button_size + (line_height * max_text_lines)
+
+        # Create artist buttons
+        for i, artist in enumerate(self.unique_artist):
+            row, col = divmod(i, buttons_per_row)
+            album_view = Artist_View(self.scrollable_holder,artist, self.albums,button_size)
+            album_view.set_artist_view()
+            album_view.grid(row=row, column=col, padx=padding, pady=padding)
+
+        # Update scrollable region
+        total_rows = -(-len(self.unique_artist) // buttons_per_row)  # Ceiling division
+        buffer_bottom = button_height_with_text * 0.8
+        total_height = total_rows * button_height_with_text + (total_rows - 1) * padding + buffer_bottom
+        self.scrollable_canvas.config(scrollregion=(0, 0, 0, total_height))
 
     def display_albums(self):
         """Populate the scrollable area with album views."""
