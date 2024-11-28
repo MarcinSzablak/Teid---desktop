@@ -60,7 +60,7 @@ class Load_Albums(tk.Frame):
         if(Filter_Settings.get_filter()=="by Artists"):
             self.display_artists()
         elif(Filter_Settings.get_filter()=="by Albums"):
-            self.display_albums()
+            self.display_albums(self.albums)
         
 
     def on_mouse_wheel(self, event):
@@ -103,15 +103,13 @@ class Load_Albums(tk.Frame):
         elif self.albums:
             self.load_music_button.pack_forget()
             self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
-            self.display_albums()
+            self.display_albums(self.albums)
         else:
             self.load_music_button.pack(expand=True)  # Redisplay button if no albums found
 
         self.top_bar.set_top_bar()
 
     def display_artists(self):
-        for widget in self.scrollable_holder.winfo_children():
-            widget.destroy()
         """Populate the scrollable area with album views."""
         # Clear existing widgets in the scrollable area
         for widget in self.scrollable_holder.winfo_children():
@@ -128,7 +126,7 @@ class Load_Albums(tk.Frame):
         # Create artist buttons
         for i, artist in enumerate(self.unique_artist):
             row, col = divmod(i, buttons_per_row)
-            album_view = Artist_View(self.scrollable_holder,artist, self.albums,button_size)
+            album_view = Artist_View(self.scrollable_holder,artist, self.albums,button_size,self.show_albums_from_artist_view)
             album_view.set_artist_view()
             album_view.grid(row=row, column=col, padx=padding, pady=padding)
 
@@ -138,7 +136,7 @@ class Load_Albums(tk.Frame):
         total_height = total_rows * button_height_with_text + (total_rows - 1) * padding + buffer_bottom
         self.scrollable_canvas.config(scrollregion=(0, 0, 0, total_height))
 
-    def display_albums(self):
+    def display_albums(self,setted_albums):
         """Populate the scrollable area with album views."""
         # Clear existing widgets in the scrollable area
         for widget in self.scrollable_holder.winfo_children():
@@ -153,17 +151,20 @@ class Load_Albums(tk.Frame):
         button_height_with_text = button_size + (line_height * max_text_lines)
 
         # Create album buttons
-        for i, album in enumerate(self.albums):
+        for i, album in enumerate(setted_albums):
             row, col = divmod(i, buttons_per_row)
             album_view = Album_View(self.scrollable_holder, album, button_size, self.show_album_details)
             album_view.set_album_view()
             album_view.grid(row=row, column=col, padx=padding, pady=padding)
 
         # Update scrollable region
-        total_rows = -(-len(self.albums) // buttons_per_row)  # Ceiling division
+        total_rows = -(-len(setted_albums) // buttons_per_row)  # Ceiling division
         buffer_bottom = button_height_with_text * 0.8
         total_height = total_rows * button_height_with_text + (total_rows - 1) * padding + buffer_bottom
         self.scrollable_canvas.config(scrollregion=(0, 0, 0, total_height))
+
+    def show_albums_from_artist_view(self,albums):
+        self.display_albums(albums)
 
     def show_album_details(self, album):
         """Display the detailed view of a selected album."""
@@ -189,7 +190,7 @@ class Load_Albums(tk.Frame):
         if(Filter_Settings.get_filter()=="by Artists"):
                 self.display_artists()
         elif(Filter_Settings.get_filter()=="by Albums"):
-            self.display_albums()
+            self.display_albums(self.albums)
 
     def set_view_album(self):
         """Initialize the album view."""
@@ -202,7 +203,7 @@ class Load_Albums(tk.Frame):
             if(Filter_Settings.get_filter()=="by Artists"):
                 self.display_artists()
             elif(Filter_Settings.get_filter()=="by Albums"):
-                self.display_albums()
+                self.display_albums(self.albums)
         else:
             self.load_music_button.pack(expand=True)
 
