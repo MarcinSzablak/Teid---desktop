@@ -10,6 +10,7 @@ from .top_bar import Top_Bar
 import threading
 from ..settings_dir.filter_settings import Filter_Settings
 from ..settings_dir.sort_settings import Sort_Settings
+from ..settings_dir.search_settings import Search_Settings
 
 class Library_View(tk.Frame):
     def __init__(self, parent):
@@ -59,7 +60,25 @@ class Library_View(tk.Frame):
 
         Filter_Settings.add_observer(self.on_filter_change)
         Sort_Settings.add_observer(self.on_sort_change)
-        
+        Search_Settings.add_observer(self.on_search_change)
+    
+    def on_search_change(self,new_value_sort):
+        if(Search_Settings.get_filter()==""):
+            self.on_filter_change(None)
+        else:
+            if(Filter_Settings.get_filter()=="by Albums"):
+                matching_albums = []
+                for album in self.albums:
+                    if album.album_name.lower().startswith(Search_Settings.get_filter().lower()):
+                        matching_albums.append(album)       
+                self.display_albums(matching_albums)
+            elif(Filter_Settings.get_filter()=="by Artists"):
+                matching_artist = []
+                for artist in self.unique_artist:
+                    if artist.lower().startswith(Search_Settings.get_filter().lower()):
+                        matching_artist.append(artist)       
+                self.display_artists(matching_artist)
+
     def on_sort_change(self,new_value_sort):
         if(Sort_Settings.get_filter()=="from A to Z"):
             self.albums.sort(key=lambda album: album.album_name)
@@ -72,7 +91,7 @@ class Library_View(tk.Frame):
 
     def on_filter_change(self,new_value_filter):
         if(Filter_Settings.get_filter()=="by Artists"):
-            self.display_artists()
+            self.display_artists(self.unique_artist)
         elif(Filter_Settings.get_filter()=="by Albums"):
             self.display_albums(self.albums)
         
@@ -113,7 +132,7 @@ class Library_View(tk.Frame):
         if self.unique_artist:
             self.load_music_button.pack_forget()
             self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
-            self.display_artists()
+            self.display_artists(self.unique_artist)
         elif self.albums:
             self.load_music_button.pack_forget()
             self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
@@ -122,7 +141,7 @@ class Library_View(tk.Frame):
             self.load_music_button.pack(expand=True)  # Redisplay button if no albums found
 
 
-    def display_artists(self):
+    def display_artists(self,setted_artists):
         """Populate the scrollable area with album views."""
         # Clear existing widgets in the scrollable area
         for widget in self.scrollable_holder.winfo_children():
@@ -137,14 +156,14 @@ class Library_View(tk.Frame):
         button_height_with_text = button_size + (line_height * max_text_lines)
 
         # Create artist buttons
-        for i, artist in enumerate(self.unique_artist):
+        for i, artist in enumerate(setted_artists):
             row, col = divmod(i, buttons_per_row)
             album_view = Artist_View(self.scrollable_holder,artist, self.albums,button_size,self.show_albums_from_artist_view)
             album_view.set_artist_view()
             album_view.grid(row=row, column=col, padx=padding, pady=padding)
 
         # Update scrollable region
-        total_rows = -(-len(self.unique_artist) // buttons_per_row)  # Ceiling division
+        total_rows = -(-len(setted_artists) // buttons_per_row)  # Ceiling division
         buffer_bottom = button_height_with_text * 0.8
         total_height = total_rows * button_height_with_text + (total_rows - 1) * padding + buffer_bottom
         self.scrollable_canvas.config(scrollregion=(0, 0, 0, total_height))
@@ -218,7 +237,7 @@ class Library_View(tk.Frame):
             if self.artist_albums_selected:
                 self.display_albums(self.artist_albums_selected)
             else:    
-                self.display_artists()
+                self.display_artists(self.unique_artist)
         elif(Filter_Settings.get_filter()=="by Albums"):
             self.display_albums(self.albums)
 
@@ -232,7 +251,7 @@ class Library_View(tk.Frame):
 
             if(Filter_Settings.get_filter()=="by Artists"):
                 self.on_sort_change(None)
-                self.display_artists()
+                self.display_artists(self.unique_artist)
             elif(Filter_Settings.get_filter()=="by Albums"):
                 self.on_sort_change(None)
                 self.display_albums(self.albums)

@@ -5,6 +5,7 @@ import eyed3  # type: ignore
 
 from .pop_ups.sort_pop_up import Sort_Pop_Up
 from .pop_ups.filter_pop_up import Filter_Pop_Up
+from ..settings_dir.search_settings import Search_Settings
 
 class Top_Bar(tk.Frame):
     def __init__(self, parent):
@@ -54,6 +55,17 @@ class Top_Bar(tk.Frame):
         self.swap_image_holder.pack(side="left", pady=5, padx=3)
 
         self.name_of_album.pack(side="right", padx=30, pady=5)
+
+        self.search_bar.bind("<KeyRelease>",self.key_release_search_bar)
+        self.search_bar.bind("<FocusOut>",self.clear_search_bar)
+
+    def clear_search_bar(self,event):
+        self.search_bar.delete(0, tk.END)
+        Search_Settings.write_filter("")
+
+    def key_release_search_bar(self,event):
+        new_filter = self.search_bar.get()
+        Search_Settings.write_filter(new_filter)
 
     def on_filter_button_clicked(self):
         Filter_Pop_Up(self)
