@@ -18,6 +18,8 @@ class Load_Albums(tk.Frame):
         self.data_from_album = None
         self.parent_size = self.winfo_width()
 
+        self.artist_albums_selected = None
+
         # Initialize and pack the Top_Bar
         self.top_bar = Top_Bar(self)
         self.top_bar.pack(side="top", fill="x")
@@ -164,7 +166,16 @@ class Load_Albums(tk.Frame):
         self.scrollable_canvas.config(scrollregion=(0, 0, 0, total_height))
 
     def show_albums_from_artist_view(self,albums):
-        self.display_albums(albums)
+        self.artist_albums_selected = albums
+        self.display_albums(self.artist_albums_selected)
+        self.top_bar.set_back_button(back_callback=lambda: self.return_albums_from_artist_view())
+        self.bind('<Configure>', self.update_layout)
+    
+    def return_albums_from_artist_view(self):
+        self.artist_albums_selected = None
+        self.bind('<Configure>', self.update_layout)
+        self.top_bar.unset_back_button()
+
 
     def show_album_details(self, album):
         """Display the detailed view of a selected album."""
@@ -182,12 +193,20 @@ class Load_Albums(tk.Frame):
             self.data_from_album = None
 
         self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
-        self.top_bar.unset_back_button()
+        if (Filter_Settings.get_filter()=="by Artists"):
+            self.top_bar.set_back_button(back_callback=lambda: self.return_albums_from_artist_view())
+            self.top_bar.unset_album_name()
+        else:
+            self.top_bar.unset_back_button()
+        
 
     def update_layout(self, event):
         """Update layout dynamically when the parent size changes."""
         self.parent_size = event.width
         if(Filter_Settings.get_filter()=="by Artists"):
+            if self.artist_albums_selected:
+                self.display_albums(self.artist_albums_selected)
+            else:    
                 self.display_artists()
         elif(Filter_Settings.get_filter()=="by Albums"):
             self.display_albums(self.albums)
