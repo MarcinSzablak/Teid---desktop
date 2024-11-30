@@ -3,14 +3,15 @@ from tkinter import font
 from PIL import Image, ImageTk
 from .load_files import Load_Files
 from .data_album_view import Data_Album_View
-from ..library_view.album_view import Album_View
-from ..library_view.artist_view import Artist_View
+from .album_view import Album_View
+from .artist_view import Artist_View
 from ..settings_dir.settings import Settings
 from .top_bar import Top_Bar
 import threading
 from ..settings_dir.filter_settings import Filter_Settings
+from ..settings_dir.sort_settings import Sort_Settings
 
-class Load_Albums(tk.Frame):
+class Library_View(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, background="#222222")
         self.albums = []
@@ -57,6 +58,17 @@ class Load_Albums(tk.Frame):
         self.is_loading = False  # Flag to prevent redundant loading
 
         Filter_Settings.add_observer(self.on_filter_change)
+        Sort_Settings.add_observer(self.on_sort_change)
+        
+    def on_sort_change(self,new_value_sort):
+        if(Sort_Settings.get_filter()=="from A to Z"):
+            self.albums.sort(key=lambda album: album.album_name)
+            self.unique_artist=sorted(self.unique_artist)
+            self.on_filter_change(None)
+        elif(Sort_Settings.get_filter()=="from Z to A"):
+            self.albums.sort(key=lambda album: album.album_name, reverse=True)
+            self.unique_artist=sorted(self.unique_artist, reverse=True)
+            self.on_filter_change(None)
 
     def on_filter_change(self,new_value_filter):
         if(Filter_Settings.get_filter()=="by Artists"):
@@ -219,8 +231,10 @@ class Load_Albums(tk.Frame):
             self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
 
             if(Filter_Settings.get_filter()=="by Artists"):
+                self.on_sort_change(None)
                 self.display_artists()
             elif(Filter_Settings.get_filter()=="by Albums"):
+                self.on_sort_change(None)
                 self.display_albums(self.albums)
         else:
             self.load_music_button.pack(expand=True)

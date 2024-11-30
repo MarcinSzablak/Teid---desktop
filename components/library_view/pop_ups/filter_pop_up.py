@@ -9,7 +9,7 @@ from ...settings_dir.filter_settings import Filter_Settings
 class Filter_Pop_Up(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
-        self.title("Select an Option")
+        self.title("Filter")
         self.geometry("150x70")
         self.transient(parent)
         self.grab_set()

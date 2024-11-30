@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from ..library_view.load_albums import Load_Albums
+from ..library_view.library_view import Library_View
 
 class Tabs_Views(tk.Frame):
     def __init__(self, parent):
@@ -30,7 +30,7 @@ class Tabs_Views(tk.Frame):
         # Add content to the tabs
         ttk.Label(self.tabs["details"], text="1").pack(pady=20)
 
-        self.view_album = Load_Albums(self.tabs["library"])
+        self.view_album = Library_View(self.tabs["library"])
         self.view_album.pack(expand=True, fill="both")
         self.view_album.set_view_album()
 

@@ -3,6 +3,7 @@ from tkinter import font
 from PIL import Image, ImageTk
 import eyed3  # type: ignore
 
+from .pop_ups.sort_pop_up import Sort_Pop_Up
 from .pop_ups.filter_pop_up import Filter_Pop_Up
 
 class Top_Bar(tk.Frame):
@@ -30,7 +31,8 @@ class Top_Bar(tk.Frame):
         self.swap_image_holder = tk.Button(self, image=self.swap_image,
                                            background="#252525", relief="flat",
                                            highlightbackground="#252525", bd=0,
-                                           activebackground='#252525')
+                                           activebackground='#252525',
+                                           command=self.on_sort_button_clicked)
         
 
         # Filter button
@@ -55,6 +57,9 @@ class Top_Bar(tk.Frame):
 
     def on_filter_button_clicked(self):
         Filter_Pop_Up(self)
+
+    def on_sort_button_clicked(self):
+        Sort_Pop_Up(self)
 
     def on_back_button_clicked(self):
         """Handle back button click to return to the album list."""
