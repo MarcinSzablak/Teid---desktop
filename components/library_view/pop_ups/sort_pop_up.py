@@ -6,7 +6,7 @@ import platform
 from ...windows_titlebar_fix import Windows_Titlebar_fix
 from ...settings_dir.filter_settings import Filter_Settings
 
-class Filter_Pop_Up(tk.Toplevel):
+class Sort_Pop_Up(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.title("Select an Option")
@@ -22,7 +22,7 @@ class Filter_Pop_Up(tk.Toplevel):
         tk.Label(self, text="Select filter option:",background="#222222",
                  font=font.Font(family="Arial", size=12),foreground="#FFFFFF").pack(pady=2)
 
-        options = ["by Albums", "by Artists"]
+        options = ["from A to Z (Album)", "from Z to A (Album)","from A to Z (Artist)", "from Z to A (Artist)"]
         self.selected_option = tk.StringVar(value=Filter_Settings.get_filter())
 
         self.select_box = tk.OptionMenu(self, self.selected_option, *options)
@@ -43,7 +43,7 @@ class Filter_Pop_Up(tk.Toplevel):
         # When the value changes, call selected_filter_option()
         self.selected_option.trace_add("write", self.selected_filter_option)
 
-    def selected_filter_option(self, *args):
+    def selected_sort_option(self, *args):
         # Update the filter setting and notify observers
         new_filter = self.selected_option.get()
         Filter_Settings.write_filter(new_filter)

@@ -109,7 +109,6 @@ class Load_Albums(tk.Frame):
         else:
             self.load_music_button.pack(expand=True)  # Redisplay button if no albums found
 
-        self.top_bar.set_top_bar()
 
     def display_artists(self):
         """Populate the scrollable area with album views."""

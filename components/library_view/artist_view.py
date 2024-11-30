@@ -28,12 +28,15 @@ class Artist_View(tk.Frame):
             case 1:
                 cover_artist1 = self.set_images_in_places(self.limited_albums_from_artist[0], (int(self.size), int(self.size)))
                 cover_artist1.pack()
+                cover_artist1.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
             case 2:
                 covers_size = int(self.size / 2)
                 cover_artist1 = self.set_images_in_places(self.limited_albums_from_artist[0], (int(covers_size), int(self.size)))
                 cover_artist2 = self.set_images_in_places(self.limited_albums_from_artist[1], (int(covers_size), int(self.size)))
                 cover_artist1.pack(side='left')
                 cover_artist2.pack(side='left')
+                cover_artist1.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
+                cover_artist2.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
             case 3:
                 covers_size = int(self.size / 2)
                 cover_artist1 = self.set_images_in_places(self.limited_albums_from_artist[0], (int(covers_size), int(covers_size)))
@@ -42,6 +45,9 @@ class Artist_View(tk.Frame):
                 cover_artist1.grid(row=0, column=0)
                 cover_artist2.grid(row=0, column=1)
                 cover_artist3.grid(row=1, column=0, columnspan=2)
+                cover_artist1.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
+                cover_artist2.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
+                cover_artist3.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
             case 4:
                 covers_size = int(self.size / 2)
                 cover_artist1 = self.set_images_in_places(self.limited_albums_from_artist[0], (int(covers_size), int(covers_size)))
@@ -52,6 +58,11 @@ class Artist_View(tk.Frame):
                 cover_artist2.grid(row=0, column=1)
                 cover_artist3.grid(row=1, column=0)
                 cover_artist4.grid(row=1, column=1)
+                cover_artist1.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
+                cover_artist2.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
+                cover_artist3.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
+                cover_artist4.bind("<Button-1>", lambda e: show_albums_from_artist_view(self.albums_from_artist))
+
             case _:
                 cover_artist1 = self.set_images_in_places(self.limited_albums_from_artist[0], (int(self.size), int(self.size)))
                 cover_artist1.pack()
