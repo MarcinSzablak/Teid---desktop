@@ -57,11 +57,14 @@ class Top_Bar(tk.Frame):
         self.name_of_album.pack(side="right", padx=30, pady=5)
 
         self.search_bar.bind("<KeyRelease>",self.key_release_search_bar)
-        self.search_bar.bind("<FocusOut>",self.clear_search_bar)
+        self.search_bar.bind("<FocusOut>",self.on_clear_search_bar)
 
-    def clear_search_bar(self,event):
+    def clear_search_bar(self):
         self.search_bar.delete(0, tk.END)
         Search_Settings.write_filter("")
+
+    def on_clear_search_bar(self,event):
+        self.clear_search_bar()
 
     def key_release_search_bar(self,event):
         new_filter = self.search_bar.get()

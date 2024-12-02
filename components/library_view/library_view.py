@@ -98,9 +98,9 @@ class Library_View(tk.Frame):
 
     def on_mouse_wheel(self, event):
         """Handle mouse wheel scrolling for the scrollable canvas."""
-        if event.delta > 0 or event.num == 4:  # Mouse wheel up (Windows/macOS/Linux)
+        if event.delta > 0 or event.num == 4:
             self.scrollable_canvas.yview_scroll(-1, "units")  # Scroll up
-        elif event.delta < 0 or event.num == 5:  # Mouse wheel down (Windows/macOS/Linux)
+        elif event.delta < 0 or event.num == 5:
             self.scrollable_canvas.yview_scroll(1, "units")  # Scroll down
 
     def load_albums_handler(self):
@@ -128,6 +128,7 @@ class Library_View(tk.Frame):
 
     def update_ui_after_loading(self):
         """Update the UI after albums are loaded."""
+        self.top_bar.clear_search_bar()
         self.is_loading = False  # Reset the loading flag
         if self.unique_artist:
             self.load_music_button.pack_forget()
@@ -202,6 +203,7 @@ class Library_View(tk.Frame):
         self.bind('<Configure>', self.update_layout)
     
     def return_albums_from_artist_view(self):
+        self.top_bar.clear_search_bar()
         self.artist_albums_selected = None
         self.bind('<Configure>', self.update_layout)
         self.top_bar.unset_back_button()
@@ -209,6 +211,7 @@ class Library_View(tk.Frame):
 
     def show_album_details(self, album):
         """Display the detailed view of a selected album."""
+        self.top_bar.clear_search_bar()
         self.scrollable_canvas.pack_forget()
         self.data_from_album = Data_Album_View(self, album)
         self.data_from_album.set_data_album_view()
@@ -218,6 +221,7 @@ class Library_View(tk.Frame):
 
     def return_to_album_list(self):
         """Return to the album list view from the album details view."""
+        self.top_bar.clear_search_bar()
         if self.data_from_album:
             self.data_from_album.destroy()
             self.data_from_album = None
@@ -232,6 +236,7 @@ class Library_View(tk.Frame):
 
     def update_layout(self, event):
         """Update layout dynamically when the parent size changes."""
+        self.top_bar.clear_search_bar()
         self.parent_size = event.width
         if(Filter_Settings.get_filter()=="by Artists"):
             if self.artist_albums_selected:
