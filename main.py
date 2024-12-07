@@ -5,6 +5,7 @@ import platform
 from components.windows_titlebar_fix import Windows_Titlebar_fix
 from components.titlebar_tabs import Titlebar_Tabs
 from components.main_content.tabs_views import Tabs_Views
+from components.bottom_bar.bottom_bar import Bottom_Bar
 
 
 class Main_Window(tk.Tk):
@@ -35,6 +36,7 @@ class Main_Window(tk.Tk):
             self.tabs_views.change_to_library,
             self.tabs_views.change_to_disk,
         )
+        self.bottom_bar = Bottom_Bar(self.frame_bottom)
 
         # Precompute layout ratios to avoid recalculating on every resize
         self.bottom_ratio = 0.13
@@ -66,6 +68,7 @@ class Main_Window(tk.Tk):
         # Initialize custom component widgets
         self.titlebar_menu.set_menu_buttons()
         self.tabs_views.set_tabs()
+        self.bottom_bar.set_bottom_bar()
 
     def start_app(self):
         """

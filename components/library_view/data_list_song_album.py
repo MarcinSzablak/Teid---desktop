@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from ..music_operator.music_operator import Music_Operator
 
 class Data_List_Song_Album(tk.Frame):
     def __init__(self, parent, album):
@@ -68,13 +69,13 @@ class Data_List_Song_Album(tk.Frame):
         selected_item = self.song_list.focus()
         item_values = self.song_list.item(selected_item)['values']
 
-        print(f"Clicked item ID: {selected_item}")
-        print(f"Item values: {item_values}")
-
         if item_values:
             for song in self.album.songs_data_list:
                 if song["title"] == item_values[0]:
                     print(song["url"])
+                    Music_Operator.source = song["url"]
+                    Music_Operator.play_music()
+
 
     def set_data_list_song_album(self):
         self.pack(expand=True, fill="both", padx=15, pady=(0, 15), side="bottom")
