@@ -75,6 +75,7 @@ class Data_List_Song_Album(tk.Frame):
                     print(song["url"])
                     Music_Operator.source = song["url"]
                     Music_Operator.play_music()
+                    Music_Operator.album=self.album
 
 
     def set_data_list_song_album(self):

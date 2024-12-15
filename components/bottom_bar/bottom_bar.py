@@ -13,11 +13,12 @@ class Bottom_Bar(tk.Frame):
         self.right_bottom_side = Right_Bottom_Side(self)
 
         self.left_bottom_side.set_left_bottom_bar()
+        self.center_bottom_side.set_center_bottom_side()
 
 
     def set_bottom_bar(self):
         self.pack(fill="x",pady=10)
-        self.grid_columnconfigure(1, weight=1, uniform="equal")
+        self.grid_columnconfigure((0,1,2), weight=1, uniform="equal")
         self.left_bottom_side.grid(column=0,row=0)
         self.center_bottom_side.grid(column=1,row=0)
         self.right_bottom_side.grid(column=2,row=0)

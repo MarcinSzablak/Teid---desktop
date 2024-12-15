@@ -39,7 +39,7 @@ class Main_Window(tk.Tk):
         self.bottom_bar = Bottom_Bar(self.frame_bottom)
 
         # Precompute layout ratios to avoid recalculating on every resize
-        self.bottom_ratio = 0.13
+        self.bottom_ratio = 0.17
         self.left_ratio = 0.8
         self.right_ratio = 0.21
 
