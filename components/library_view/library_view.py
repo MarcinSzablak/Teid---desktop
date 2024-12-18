@@ -231,6 +231,7 @@ class Library_View(tk.Frame):
 
         self.scrollable_canvas.pack(fill="both", expand=True, padx=(15, 0))
         self.top_bar.unset_back_button()
+        self.top_bar.set_back_button(back_callback=lambda: self.return_albums_from_artist_view())
 
     def set_view_album(self):
         """Initialize the album view."""
