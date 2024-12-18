@@ -210,7 +210,7 @@ class Library_View(tk.Frame):
     def return_albums_from_artist_view(self):
         self.artist_albums_selected = None
         self.top_bar.unset_back_button()
-        self.display_artists(self.unique_artist)
+        self.update_layout()
 
     def show_album_details(self, album):
         """Display the detailed view of a selected album."""
