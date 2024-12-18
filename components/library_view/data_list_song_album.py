@@ -72,10 +72,11 @@ class Data_List_Song_Album(tk.Frame):
         if item_values:
             for song in self.album.songs_data_list:
                 if song["title"] == item_values[0]:
-                    print(song["url"])
+                    #print(song["url"])
                     Music_Operator.source = song["url"]
                     Music_Operator.play_music()
                     Music_Operator.album=self.album
+                    Music_Operator.notify_observers(True)
 
 
     def set_data_list_song_album(self):

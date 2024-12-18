@@ -84,7 +84,7 @@ class Disk_View(tk.Frame):
         self.update_image()
 
         # Continue checking for rotation (loop every 50ms)
-        self.after(50, self.rotate_image)
+        self.after(10, self.rotate_image)
 
     def update_image(self):
         """Update the canvas with the current image in the main thread."""
@@ -116,10 +116,7 @@ class Disk_View(tk.Frame):
         """Add the frame to the parent."""
         self.pack(side="right", fill=tk.BOTH, expand=True)
 
-    def start_rotation(self):
+    def move_rotation(self,move):
         """Start the rotation of the disk."""
-        self.move = True
+        self.move = move
 
-    def stop_rotation(self):
-        """Stop the rotation of the disk."""
-        self.move = False

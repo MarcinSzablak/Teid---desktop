@@ -6,31 +6,45 @@ class Music_Operator:
     album = None
     is_paused = False
     pygame.mixer.init()
+
+    observers = []
+
+    @staticmethod
+    def add_observer(observer):
+        """Adds an observer to the list."""
+        Music_Operator.observers.append(observer)
+
+    @staticmethod
+    def notify_observers(new_info,**args):
+        """Notifies all observers of the filter change."""
+        for observer in Music_Operator.observers:
+            observer(new_info)
     
     @staticmethod
     def play_music():
         pygame.mixer.music.load(Music_Operator.source)
         pygame.mixer.music.play()
-        if pygame.mixer.music.get_busy():
-            Music_Operator.unpause_music()
-
-    @staticmethod
-    def is_busy():
-        return pygame.mixer.music.get_busy()
+        Music_Operator.unpause_music()
 
     @staticmethod
     def set_music_value(value):
         pygame.mixer.music.set_volume(value)
 
     @staticmethod
+    def is_busy():
+        return pygame.mixer.music.get_busy()
+
+    @staticmethod
     def pause_music():
         pygame.mixer.music.pause()
         Music_Operator.is_paused = True
+        Music_Operator.notify_observers(Music_Operator.is_paused)
     
     @staticmethod
     def unpause_music():
         pygame.mixer.music.unpause()
         Music_Operator.is_paused = False
+        Music_Operator.notify_observers(Music_Operator.is_paused)
 
     @staticmethod
     def get_song_index():

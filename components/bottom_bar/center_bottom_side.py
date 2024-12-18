@@ -27,14 +27,16 @@ class Center_Bottom_Side(tk.Frame):
         self.play_pause_button.pack()
 
     def set_play_pause_button(self):
-        if not Music_Operator.is_paused and Music_Operator.is_busy():
+        if not Music_Operator.is_paused:
             Music_Operator.pause_music()
             self.play_pause_button.image = self.set_play_pause_image("assets/playarrow.png")
             self.play_pause_button.config(image=self.play_pause_button.image)
+            Music_Operator.notify_observers(False)
         else:
             Music_Operator.unpause_music()
             self.play_pause_button.image = self.set_play_pause_image("assets/pause.png")
             self.play_pause_button.config(image=self.play_pause_button.image)
+            Music_Operator.notify_observers(True)
 
     def set_play_pause_image(self, photo_uri):
         cover_image = Image.open(photo_uri)

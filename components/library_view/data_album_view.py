@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 from .data_disk_album import Data_Disk_Album
 from .disk_view import Disk_View
 from .data_list_song_album import Data_List_Song_Album
+from ..music_operator.music_operator import Music_Operator
 
 class Data_Album_View(tk.Frame):
     def __init__(self, parent, album):
@@ -19,6 +20,8 @@ class Data_Album_View(tk.Frame):
         self.disk_info = Data_Disk_Album(self.left_side, album)
         self.disk_view = Disk_View(self.right_side, album)  # Disk_View runs on a separate thread
         self.songs_listed = Data_List_Song_Album(self.left_side, album)
+
+        Music_Operator.add_observer(self.disk_view.move_rotation)
 
     def set_data_album_view(self):
         # Layout the components using grid
