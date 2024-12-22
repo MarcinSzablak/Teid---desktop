@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import font
 from PIL import Image, ImageTk
-import eyed3  # type: ignore
+import eyed3 # type: ignore
+import mutagen # type: ignore
+from mutagen.flac import FLAC # type: ignore
+from tinytag import TinyTag # type: ignore
 
 from .pop_ups.sort_pop_up import Sort_Pop_Up
 from .pop_ups.filter_pop_up import Filter_Pop_Up
@@ -115,13 +118,41 @@ class Top_Bar(tk.Frame):
 
     def set_album_name(self, album):
         """Set album name when viewing album details."""
-        audio_file = eyed3.load(album.song_list[0])
-        if audio_file.tag:
-            for tag in audio_file.tag.frame_set:
-                frame = audio_file.tag.frame_set[tag][0]
-                if tag == b'TALB':
-                    album_title = audio_file.tag.album
-                    self.name_of_album.config(text=str(album_title))
+        if album.song_list:
+            audio_file_path = album.song_list[0]
+
+            try:
+                if audio_file_path.lower().endswith('.mp3'):
+                    audio_file = eyed3.load(audio_file_path)
+                    if audio_file.tag:
+                        album_title = audio_file.tag.album
+                        if album_title:
+                            self.name_of_album.config(text=str(album_title))
+
+                elif audio_file_path.lower().endswith('.flac'):
+                    audio_file = FLAC(audio_file_path)
+                    album_title = audio_file.get('album', [None])[0]
+                    if album_title:
+                        self.name_of_album.config(text=str(album_title))
+
+                elif audio_file_path.lower().endswith('.ogg'):
+                    audio_file = mutagen.File(audio_file_path, easy=True)
+                    album_title = audio_file.get('album', None)
+                    if album_title:
+                        self.name_of_album.config(text=str(album_title))
+
+                elif audio_file_path.lower().endswith('.wav'):
+                    audio_file = TinyTag.get(audio_file_path)
+                    album_title = audio_file.title
+                    if album_title:
+                        self.name_of_album.config(text=str(album_title))
+
+                else:
+                    self.name_of_album.config(text="Unknown Format")
+
+            except Exception as e:
+                print(f"Error processing {audio_file_path}: {e}")
+                self.name_of_album.config(text="Error loading album name")
 
     def unset_album_name(self):
         """Unset album name when returning to album list."""

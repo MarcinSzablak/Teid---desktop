@@ -1,7 +1,12 @@
 import tkinter as tk
 from tkinter import font
 from PIL import Image, ImageTk
-import eyed3  # type: ignore
+import eyed3 # type: ignore
+import mutagen # type: ignore
+from mutagen.flac import FLAC # type: ignore
+from mutagen.mp3 import MP3 # type: ignore
+from tinytag import TinyTag # type: ignore
+from PIL import Image, ImageTk
 import io
 
 class Album_View(tk.Frame):
@@ -65,30 +70,63 @@ class Album_View(tk.Frame):
         return cover_image
 
     def extract_album_metadata(self):
-        """Extract and set metadata (album name, band name, cover image) from the first song."""
-        if self.album.song_list:
-            audio_file = eyed3.load(self.album.song_list[0])
-            if audio_file.tag:
-                # Update album title from metadata
-                album_title = audio_file.tag.album
-                if album_title:
-                    self.album_name.config(text=album_title)
+        """Update album metadata and cover art from the first song in the album's song list."""
+        if not self.album.song_list:
+            return
+        audio_file_path = self.album.song_list[0]
 
-                # Update band name from metadata
-                band_name = audio_file.tag.artist
-                if band_name:
-                    self.album.band_name = str(band_name)
+        try:
+            if audio_file_path.lower().endswith('.mp3'):
+                audio_file = eyed3.load(audio_file_path)
+                album_title = audio_file.tag.album if audio_file.tag else None
+                band_name = audio_file.tag.artist if audio_file.tag else "None"
+                cover_image = None
+                if audio_file.tag:
+                    for tag in audio_file.tag.frame_set:
+                        frame = audio_file.tag.frame_set[tag][0]
+                        if tag == b'APIC':
+                            cover_image = Image.open(io.BytesIO(frame.image_data))
 
-                # Attempt to extract cover image from metadata if available
-                for tag in audio_file.tag.frame_set:
-                    frame = audio_file.tag.frame_set[tag][0]
-                    if tag == b'APIC':  # Cover art
-                        image_data = frame.image_data
-                        cover_image = Image.open(io.BytesIO(image_data))
-                        cover_image = cover_image.resize((self.size, self.size))
-                        cover_photo = ImageTk.PhotoImage(cover_image)
-                        self.cover_button.config(image=cover_photo)
-                        self.cover_button.image = cover_photo
+            elif audio_file_path.lower().endswith('.flac'):
+                audio_file = FLAC(audio_file_path)
+                album_title = audio_file.get('album', [None])[0]
+                band_name = audio_file.get('artist', ['None'])[0]
+                cover_image = None
+                for tag in audio_file.tags.values():
+                    if tag.FrameID == 'APIC':
+                        cover_image = Image.open(io.BytesIO(tag.data))
+
+            elif audio_file_path.lower().endswith('.ogg'):
+                audio_file = mutagen.File(audio_file_path, easy=True)
+                album_title = audio_file.get('album', None)
+                band_name = audio_file.get('artist', 'None')
+                cover_image = None
+                if audio_file.pictures:
+                    cover_image = Image.open(io.BytesIO(audio_file.pictures[0].data))
+
+            elif audio_file_path.lower().endswith('.wav'):
+                audio_file = TinyTag.get(audio_file_path)
+                album_title = audio_file.title
+                band_name = audio_file.artist
+                cover_image = None
+
+            else:
+                album_title, band_name, cover_image = None, "None", None
+
+            if album_title:
+                self.album_name.config(text=album_title)
+
+            self.album.band_name = band_name
+
+            # Update cover image if available
+            if cover_image:
+                cover_image = cover_image.resize((self.size, self.size))
+                cover_photo = ImageTk.PhotoImage(cover_image)
+                self.cover_button.config(image=cover_photo)
+                self.cover_button.image = cover_photo
+
+        except Exception as e:
+            pass
 
     def set_album_view(self):
         """Place the widgets (album cover and name) into the frame."""

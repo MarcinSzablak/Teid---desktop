@@ -3,6 +3,7 @@ from tkinter import ttk
 from .left_bottom_side import Left_Bottom_Side
 from .center_bottom_side import Center_Bottom_Side
 from .right_bottom_side import Right_Bottom_Side
+from ..music_operator.music_operator import Music_Operator
 
 class Bottom_Bar(tk.Frame):
     def __init__(self,parent):
@@ -14,6 +15,8 @@ class Bottom_Bar(tk.Frame):
 
         self.left_bottom_side.set_left_bottom_bar()
         self.center_bottom_side.set_center_bottom_side()
+
+        Music_Operator.add_observer(self.center_bottom_side.change_pause_play_button_clicked_in_list)
 
 
     def set_bottom_bar(self):

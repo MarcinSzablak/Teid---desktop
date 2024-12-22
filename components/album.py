@@ -1,5 +1,8 @@
 import eyed3  # type: ignore
+from mutagen.flac import FLAC # type: ignore
+from tinytag import TinyTag # type: ignore
 import io
+import os
 
 
 class Album:
@@ -27,40 +30,14 @@ class Album:
 
         Args:
             song_uri (str): The file path to the song.
-        """
+        """ 
         try:
-            audio_file = eyed3.load(song_uri)
-            if not audio_file or not audio_file.tag:
-                raise ValueError(f"Unable to read or parse metadata for file: {song_uri}")
+            metadata = self.get_file_metadata(song_uri)
 
-            # Extract cover image data if available
-            if not self.cover:
-                for frame in audio_file.tag.frame_set.get(b'APIC', []):
-                    if frame.image_data:
-                        self.cover = io.BytesIO(frame.image_data)
-                        break
-
-            # Calculate song duration in minutes and seconds
-            duration_seconds = int(audio_file.info.time_secs) if audio_file.info.time_secs else 0
-            duration_minutes, remaining_seconds = divmod(duration_seconds, 60)
-
-            # Extract title and sanitize it if missing
-            song_title = audio_file.tag.title or self._sanitize_filename(song_uri)
-
-            #add artist
-            self.band = audio_file.tag.artist or "None"
-
-            # Extract track number
-            if audio_file.tag.track_num[0]==None:
-                track_number=0
-            else:
-                track_number = audio_file.tag.track_num[0]
-
-            # Append song data
             self.songs_data_list.append({
-                "title": str(song_title),
-                "duration": str(f"{duration_minutes}.{remaining_seconds:02d}"),
-                "number": track_number,
+                "title": str(metadata[0]),
+                "duration": str(f"{metadata[1]}.{metadata[2]:02d}"),
+                "number": metadata[3],
                 "url": str(song_uri)
             })
 
@@ -83,3 +60,92 @@ class Album:
             if file_name.lower().endswith(file_extension):
                 return file_name[:-len(file_extension)]
         return file_name.strip()
+    
+    def get_file_metadata(self,song_uri):
+        file_extension = os.path.splitext(song_uri)[1][1:].lower()
+        match file_extension:
+            case "mp3":
+                audio_file = eyed3.load(song_uri)
+
+                if not self.cover:
+                    for frame in audio_file.tag.frame_set.get(b'APIC', []):
+                        if frame.image_data:
+                            self.cover = io.BytesIO(frame.image_data)
+                            break
+
+                duration_seconds = int(audio_file.info.time_secs) if audio_file.info.time_secs else 0
+                duration_minutes, remaining_seconds = divmod(duration_seconds, 60)
+
+                song_title = audio_file.tag.title or self._sanitize_filename(song_uri)
+
+                self.band = audio_file.tag.artist or "None"
+
+                if audio_file.tag.track_num[0]==None:
+                    track_number=0
+                else:
+                    track_number = audio_file.tag.track_num[0]
+
+                return(song_title,duration_minutes,remaining_seconds,track_number)
+            case "flac":
+                audio = FLAC(song_uri)
+                for key, value in audio.items():
+                    if(key=="title"):
+                        song_title=value[0]
+                    else:
+                        song_title=self._sanitize_filename(song_uri)
+                    
+                    if(key=="artist"):
+                        self.band=value[0]
+                    else:
+                        self.band="None"
+                    
+                    if(key=="tracknumber"):
+                        track_number=value[0]
+                    else:
+                        track_number=0
+                    
+                duration_seconds = int(audio.info.length) if audio.info.length else 0
+                duration_minutes, remaining_seconds = divmod(duration_seconds, 60)
+                return(song_title,duration_minutes,remaining_seconds,track_number)
+            case "wav":
+                tag = TinyTag.get(song_uri)
+                if(tag.title):
+                    song_title=tag.title
+                else:
+                    song_title=self._sanitize_filename(song_uri)
+                
+                if(tag.artist):
+                    self.band=tag.artist
+                else:
+                    self.band="None"
+                duration_seconds = int(tag.duration) if tag.duration else 0
+                duration_minutes, remaining_seconds = divmod(duration_seconds, 60)
+
+                if(tag.track):
+                        track_number=tag.track
+                else:
+                    track_number=0
+
+                return(song_title,duration_minutes,remaining_seconds,track_number)
+            case "ogg":
+                tag = TinyTag.get(song_uri)
+                if(tag.title):
+                    song_title=tag.title
+                else:
+                    song_title=self._sanitize_filename(song_uri)
+                
+                if(tag.artist):
+                    self.band=tag.artist
+                else:
+                    self.band="None"
+                duration_seconds = int(tag.duration) if tag.duration else 0
+                duration_minutes, remaining_seconds = divmod(duration_seconds, 60)
+
+                if(tag.track):
+                        track_number=tag.track
+                else:
+                    track_number=0
+
+                return(song_title,duration_minutes,remaining_seconds,track_number)
+            case _:
+                return None
