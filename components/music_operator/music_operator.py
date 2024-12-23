@@ -52,3 +52,11 @@ class Music_Operator:
             for song in Music_Operator.album.songs_data_list:
                 if song["url"]==Music_Operator.source:
                     Music_Operator.song_index = Music_Operator.album.songs_data_list.index(song)
+    @staticmethod
+    def set_song_by_index(index):
+        if Music_Operator.album != None:
+            for song_index in range(0,len(Music_Operator.album.songs_data_list)):
+                if(song_index==index):
+                    Music_Operator.source=Music_Operator.album.songs_data_list[index]["url"]
+                    Music_Operator.play_music()
+                    Music_Operator.notify_observers(True)

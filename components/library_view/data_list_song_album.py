@@ -54,8 +54,10 @@ class Data_List_Song_Album(tk.Frame):
         self.album.songs_data_list.sort(key=lambda song: song['number'] if song['number'] is not None else float('inf'))
 
         # Insert songs into the Treeview
-        for song in self.album.songs_data_list:
-            self.song_list.insert("", tk.END, values=(song['title'], song['duration'], song['number']))
+        for index, song in enumerate(self.album.songs_data_list):
+            # Insert with a unique ID for each item (use index or a unique string)
+            item_id = f"song_{index}"
+            self.song_list.insert("", tk.END, item_id, values=(song['title'], song['duration'], song['number']))
 
         self.song_list.bind("<ButtonRelease-1>", lambda e: self.select_music())
 
@@ -65,6 +67,8 @@ class Data_List_Song_Album(tk.Frame):
         # Pack the Treeview widget into the frame
         self.song_list.pack(expand=True, fill="both")
 
+        Music_Operator.add_observer(self.skip_to_song)
+
     def select_music(self):
         selected_item = self.song_list.focus()
         item_values = self.song_list.item(selected_item)['values']
@@ -72,12 +76,23 @@ class Data_List_Song_Album(tk.Frame):
         if item_values:
             for song in self.album.songs_data_list:
                 if song["title"] == item_values[0]:
-                    #print(song["url"])
                     Music_Operator.source = song["url"]
                     Music_Operator.play_music()
                     Music_Operator.album=self.album
                     Music_Operator.notify_observers(True)
 
+    def skip_to_song(self,value):
+        Music_Operator.get_song_index()
+        if(Music_Operator.song_index is not None):
+            self.after(100, self.select_song_at_index)
+            
+    def select_song_at_index(self):
+        try:
+            item_id = f"song_{Music_Operator.song_index}"
+            if item_id in self.song_list.get_children():
+                self.song_list.selection_set(item_id)
+        except:
+            pass
 
     def set_data_list_song_album(self):
         self.pack(expand=True, fill="both", padx=15, pady=(0, 15), side="bottom")
