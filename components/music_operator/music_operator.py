@@ -60,3 +60,10 @@ class Music_Operator:
                     Music_Operator.source=Music_Operator.album.songs_data_list[index]["url"]
                     Music_Operator.play_music()
                     Music_Operator.notify_observers(True)
+    
+    @staticmethod
+    def get_song_data(index):
+        if Music_Operator.album != None:
+            for song_index in range(0,len(Music_Operator.album.songs_data_list)):
+                if(song_index==index):
+                    return Music_Operator.album.songs_data_list[index]
