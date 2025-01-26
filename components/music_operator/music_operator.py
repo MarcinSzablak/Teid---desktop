@@ -67,3 +67,11 @@ class Music_Operator:
             for song_index in range(0,len(Music_Operator.album.songs_data_list)):
                 if(song_index==index):
                     return Music_Operator.album.songs_data_list[index]
+                
+    @staticmethod
+    def get_song_position():
+        return pygame.mixer.music.get_pos()/1000
+    
+    @staticmethod
+    def set_song_position(value):
+        pygame.mixer.music.set_pos(value)
